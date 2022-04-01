@@ -1,6 +1,6 @@
 # Turn Comments Off
 
-Turn comments off in WordPress.
+Turn comments off everywhere in WordPress.
 
 ## Description
 
