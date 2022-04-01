@@ -22,6 +22,8 @@ Activate this plugin to immediately remove all comment functionality from WordPr
 
 No configuration necessary (or available).
 
+If you find something we missed, [please let us know](https://github.com/happyprime/turn-comments-off)!
+
 ## Changelog
 
 ### 1.0.0
