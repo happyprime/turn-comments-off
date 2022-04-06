@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Turn Comments Off
  * Description:  Turn comments off everywhere in WordPress.
- * Version:      1.0.0
+ * Version:      1.0.1
  * Plugin URI:   https://github.com/happyprime/turn-comments-off/
  * Author:       Happy Prime
  * Author URI:   https://happyprime.co
@@ -19,6 +19,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
+
+namespace TurnCommentsOff;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {

@@ -3,7 +3,7 @@ Contributors: jeremyfelt, slocker, philcable, wpgirl369
 Tags: comments
 Requires at least: 5.9
 Tested up to: 5.9
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 Requires PHP: 5.6
 
@@ -26,6 +26,10 @@ If you find something we missed, [please let us know](https://github.com/happypr
 
 ## Changelog
 
+### 1.0.1
+
+* Add PHP namespace.
+
 ### 1.0.0
 
-Initial release.
+* Initial release.
