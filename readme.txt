@@ -3,7 +3,7 @@ Contributors: jeremyfelt, slocker, philcable, wpgirl369
 Tags: comments
 Requires at least: 5.9
 Tested up to: 5.9
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 Requires PHP: 5.6
 
@@ -25,6 +25,10 @@ No configuration necessary (or available).
 If you find something we missed, [please let us know](https://github.com/happyprime/turn-comments-off)!
 
 ## Changelog
+
+### 1.0.2
+
+* Add automated GitHub deployments to wp.org.
 
 ### 1.0.1
 

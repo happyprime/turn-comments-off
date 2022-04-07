@@ -19,6 +19,10 @@ If you find something we missed, [please let us know](https://github.com/happypr
 
 ## Changelog
 
+### 1.0.2
+
+* Add automated GitHub deployments to wp.org.
+
 ### 1.0.1
 
 * Add PHP namespace.
