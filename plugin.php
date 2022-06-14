@@ -46,6 +46,10 @@ add_filter( 'feed_links_show_comments_feed', '__return_false' );
 add_action( 'init', __NAMESPACE__ . '\remove_comment_support', 99 );
 add_action( 'init', __NAMESPACE__ . '\remove_trackback_support', 99 );
 
+// Remove comment blocks from the editor. (Twice to be sure!)
+add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\unregister_comment_blocks_javascript' );
+add_action( 'init', __NAMESPACE__ . '\unregister_comment_blocks', 99 );
+
 // And disable all comment related views in the admin.
 add_filter( 'wp_count_comments', __NAMESPACE__ . '\filter_wp_count_comments' );
 add_action( 'add_admin_bar_menus', __NAMESPACE__ . '\remove_admin_bar_comments_menu' );
@@ -75,6 +79,50 @@ function remove_trackback_support() {
 	foreach ( $post_types as $post_type ) {
 		remove_post_type_support( $post_type, 'trackbacks' );
 	}
+}
+
+/**
+ * Enqueue a script to remove any client-side registration of WordPress
+ * core comment blocks.
+ *
+ * @since 1.1.0
+ */
+function unregister_comment_blocks_javascript() {
+	$asset_data = include_once __DIR__ . '/build/index.asset.php';
+
+	wp_enqueue_script(
+		'turn-comments-off',
+		plugin_dir_url( __FILE__ ) . '/build/index.js',
+		$asset_data['dependencies'],
+		$asset_data['version'],
+		true
+	);
+}
+
+/**
+ * Remove any server-side registration of WordPress core comment blocks.
+ *
+ * @see unregister_comment_blocks_javascript() for client-side removal.
+ *
+ * @since 1.1.0
+ */
+function unregister_comment_blocks() {
+	unregister_block_type( 'core/comment-author-name' );
+	unregister_block_type( 'core/comment-content' );
+	unregister_block_type( 'core/comment-date' );
+	unregister_block_type( 'core/comment-edit-link' );
+	unregister_block_type( 'core/comment-reply-link' );
+	unregister_block_type( 'core/comment-template' );
+	unregister_block_type( 'core/comments-pagination' );
+	unregister_block_type( 'core/comments-pagination-next' );
+	unregister_block_type( 'core/comments-pagination-numbers' );
+	unregister_block_type( 'core/comments-pagination-previous' );
+	unregister_block_type( 'core/comments-query-loop' );
+	unregister_block_type( 'core/comments-title' );
+	unregister_block_type( 'core/latest-comments' );
+	unregister_block_type( 'core/post-comments-form' );
+	unregister_block_type( 'core/post-comments-count' ); // Gutenberg only.
+	unregister_block_type( 'core/post-comments-link' ); // Gutenberg only.
 }
 
 /**
