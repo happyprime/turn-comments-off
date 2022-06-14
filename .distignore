@@ -1,4 +1,7 @@
 .github
 .gitignore
 .distignore
+node_modules
+package.json
+package-lock.json
 README.md

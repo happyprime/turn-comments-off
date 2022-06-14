@@ -1,0 +1,23 @@
+{
+  "name": "turn-comments-off",
+  "version": "1.1.0",
+  "description": "Turn comments off everywhere in WordPress",
+  "scripts": {
+    "build": "wp-scripts build",
+	"lint": "wp-scripts lint-js",
+	"fix": "wp-scripts lint-js --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/happyprime/turn-comments-off.git"
+  },
+  "author": "Happy Prime",
+  "license": "GPL-2.0-or-later",
+  "bugs": {
+    "url": "https://github.com/happyprime/turn-comments-off/issues"
+  },
+  "homepage": "https://github.com/happyprime/turn-comments-off#readme",
+  "devDependencies": {
+    "@wordpress/scripts": "^23.2.0"
+  }
+}
