@@ -42,6 +42,9 @@ add_filter( 'comments_pre_query', '__return_empty_array' );
 // And disable the comments feed.
 add_filter( 'feed_links_show_comments_feed', '__return_false' );
 
+// And remove comment rewrite rules.
+add_filter( 'comments_rewrite_rules', '__return_empty_array' );
+
 // Then remove comment support from everything.
 add_action( 'init', __NAMESPACE__ . '\remove_comment_support', 99 );
 add_action( 'init', __NAMESPACE__ . '\remove_trackback_support', 99 );
