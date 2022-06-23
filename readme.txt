@@ -1,5 +1,5 @@
 # Turn Comments Off
-Contributors: jeremyfelt, slocker, philcable, wpgirl369
+Contributors: happyprime, jeremyfelt, slocker, philcable, wpgirl369
 Tags: comments
 Requires at least: 5.9
 Tested up to: 5.9
