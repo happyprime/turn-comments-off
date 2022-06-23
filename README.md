@@ -12,12 +12,17 @@ Activate this plugin to immediately remove all comment functionality from WordPr
 * Remove the comments bubble from the admin bar.
 * Remove "Recent Comments" from the site activity dashboard widget.
 * Remove the comments feed link.
+* Unregister all core comment blocks in the editor.
 
 No configuration necessary (or available).
 
 If you find something we missed, [please let us know](https://github.com/happyprime/turn-comments-off)!
 
 ## Changelog
+
+### 1.1.0
+
+* Unregister core comment blocks in the editor.
 
 ### 1.0.2
 
