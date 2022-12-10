@@ -1,33 +1,36 @@
-import { unregisterBlockType } from '@wordpress/blocks';
-import { getBlockType } from '@wordpress/blocks';
+import { getBlockType, unregisterBlockType } from '@wordpress/blocks';
 import domReady from '@wordpress/dom-ready';
 
 // Unregister comment-related blocks provided by WordPress core.
 domReady( () => {
 	const blocks = [
-		// Blocks that will usually show as available on posts and pages.
-		'core/latest-comments',
-		'core/comments-query-loop',
-		'core/post-comments-form',
+		'core/comments',
+		'core/comments-query-loop', // Replaced by core/comments in Gutenberg 13.7.
 
-		// Blocks used inside the comments query loop block.
+		'core/comment-author-avatar',
 		'core/comment-author-name',
 		'core/comment-content',
 		'core/comment-date',
 		'core/comment-edit-link',
 		'core/comment-reply-link',
 		'core/comment-template',
+
 		'core/comments-pagination',
 		'core/comments-pagination-next',
 		'core/comments-pagination-numbers',
 		'core/comments-pagination-previous',
 		'core/comments-title',
+
+		'core/latest-comments',
+
+		'core/post-comment',
 		'core/post-comments-count',
+		'core/post-comments-form',
 		'core/post-comments-link',
 	];
 
-	blocks.forEach( function ( block ) {
-		if ( getBlockType( block ) ) {
+	blocks.forEach( ( block ) => {
+		if ( undefined !== getBlockType( block ) ) {
 			unregisterBlockType( block );
 		}
 	} );
