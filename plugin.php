@@ -51,7 +51,7 @@ add_action( 'init', __NAMESPACE__ . '\remove_trackback_support', 99 );
 
 // Remove comment blocks from the editor. (Twice to be sure!)
 add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\unregister_comment_blocks_javascript' );
-add_action( 'init', __NAMESPACE__ . '\unregister_comment_blocks', 99 );
+add_filter( 'allowed_block_types_all', __NAMESPACE__ . '\unregister_comment_blocks', 99, 1 );
 
 // And disable all comment related views in the admin.
 add_filter( 'wp_count_comments', __NAMESPACE__ . '\filter_wp_count_comments' );
@@ -109,36 +109,31 @@ function unregister_comment_blocks_javascript() {
  *
  * @since 1.1.0
  */
-function unregister_comment_blocks() {
-	$blocks = [
-		'core/comments',
-		'core/comments-query-loop', // Replaced by core/comments in Gutenberg 13.7.
+function unregister_comment_blocks( $allowed_blocks ) {
 
-		'core/comment-author-avatar',
-		'core/comment-author-name',
-		'core/comment-content',
-		'core/comment-date',
-		'core/comment-edit-link',
-		'core/comment-reply-link',
-		'core/comment-template',
+	// get all the registered blocks
+	$blocks = \WP_Block_Type_Registry::get_instance()->get_all_registered();
 
-		'core/comments-pagination',
-		'core/comments-pagination-next',
-		'core/comments-pagination-numbers',
-		'core/comments-pagination-previous',
-		'core/comments-title',
+	// disable comment blocks
+	unset( $blocks[ 'core/comment-author-name' ] );
+	unset( $blocks[ 'core/comment-content' ] );
+	unset( $blocks[ 'core/comment-date' ] );
+	unset( $blocks[ 'core/comment-edit-link' ] );
+	unset( $blocks[ 'core/comment-reply-link' ] );
+	unset( $blocks[ 'core/comment-template' ] );
+	unset( $blocks[ 'core/comments-pagination' ] );
+	unset( $blocks[ 'core/comments-pagination-next' ] );
+	unset( $blocks[ 'core/comments-pagination-numbers' ] );
+	unset( $blocks[ 'core/comments-pagination-previous' ] );
+	unset( $blocks[ 'core/comments-query-loop' ] );
+	unset( $blocks[ 'core/comments-title' ] );
+	unset( $blocks[ 'core/latest-comments' ] );
+	unset( $blocks[ 'core/post-comments-form' ] );
+	unset( $blocks[ 'core/post-comments-count' ] ); // Gutenberg only.
+	unset( $blocks[ 'core/post-comments-link' ] ); // Gutenberg only.
 
-		'core/latest-comments',
-
-		'core/post-comment',
-		'core/post-comments-count',
-		'core/post-comments-form',
-		'core/post-comments-link',
-	];
-
-	foreach ( $blocks as $block ) {
-		unregister_block_type( $block );
-	}
+	// return the new list of allowed blocks
+	return array_keys( $blocks );
 }
 
 /**
