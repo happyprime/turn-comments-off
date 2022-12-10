@@ -20,6 +20,12 @@ If you find something we missed, [please let us know](https://github.com/happypr
 
 ## Changelog
 
+### 1.2.0
+
+* Update the list of blocks unregistered to include latest from Gutenberg and WordPress.
+* Update `wordpress/scripts` to 24.6.0.
+* Refactor how the list of blocks is managed to make future maintenance easier.
+
 ### 1.1.1
 
 * Unregister core comment blocks in the editor.

@@ -2,8 +2,8 @@
 Contributors: happyprime, jeremyfelt, slocker, philcable, wpgirl369
 Tags: comments
 Requires at least: 5.9
-Tested up to: 6.0
-Stable tag: 1.1.1
+Tested up to: 6.1
+Stable tag: 1.2.0
 License: GPLv2 or later
 Requires PHP: 5.6
 
@@ -26,6 +26,12 @@ No configuration necessary (or available).
 If you find something we missed, [please let us know](https://github.com/happyprime/turn-comments-off)!
 
 ## Changelog
+
+### 1.2.0
+
+* Update the list of blocks unregistered to include latest from Gutenberg and WordPress.
+* Update `wordpress/scripts` to 24.6.0.
+* Refactor how the list of blocks is managed to make future maintenance easier.
 
 ### 1.1.1
 
