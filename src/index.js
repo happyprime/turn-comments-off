@@ -1,25 +1,37 @@
-import { unregisterBlockType } from '@wordpress/blocks';
+import { getBlockType, unregisterBlockType } from '@wordpress/blocks';
 import domReady from '@wordpress/dom-ready';
 
 // Unregister comment-related blocks provided by WordPress core.
 domReady( () => {
-	// Blocks that will usually show as available on posts and pages.
-	unregisterBlockType( 'core/latest-comments' );
-	unregisterBlockType( 'core/comments-query-loop' );
-	unregisterBlockType( 'core/post-comments-form' );
+	const blocks = [
+		'core/comments',
+		'core/comments-query-loop', // Replaced by core/comments in Gutenberg 13.7.
 
-	// Blocks used inside the comments query loop block.
-	unregisterBlockType( 'core/comment-author-name' );
-	unregisterBlockType( 'core/comment-content' );
-	unregisterBlockType( 'core/comment-date' );
-	unregisterBlockType( 'core/comment-edit-link' );
-	unregisterBlockType( 'core/comment-reply-link' );
-	unregisterBlockType( 'core/comment-template' );
-	unregisterBlockType( 'core/comments-pagination' );
-	unregisterBlockType( 'core/comments-pagination-next' );
-	unregisterBlockType( 'core/comments-pagination-numbers' );
-	unregisterBlockType( 'core/comments-pagination-previous' );
-	unregisterBlockType( 'core/comments-title' );
-	unregisterBlockType( 'core/post-comments-count' );
-	unregisterBlockType( 'core/post-comments-link' );
+		'core/comment-author-avatar',
+		'core/comment-author-name',
+		'core/comment-content',
+		'core/comment-date',
+		'core/comment-edit-link',
+		'core/comment-reply-link',
+		'core/comment-template',
+
+		'core/comments-pagination',
+		'core/comments-pagination-next',
+		'core/comments-pagination-numbers',
+		'core/comments-pagination-previous',
+		'core/comments-title',
+
+		'core/latest-comments',
+
+		'core/post-comment',
+		'core/post-comments-count',
+		'core/post-comments-form',
+		'core/post-comments-link',
+	];
+
+	blocks.forEach( ( block ) => {
+		if ( undefined !== getBlockType( block ) ) {
+			unregisterBlockType( block );
+		}
+	} );
 } );

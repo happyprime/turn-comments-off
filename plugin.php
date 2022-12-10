@@ -110,22 +110,35 @@ function unregister_comment_blocks_javascript() {
  * @since 1.1.0
  */
 function unregister_comment_blocks() {
-	unregister_block_type( 'core/comment-author-name' );
-	unregister_block_type( 'core/comment-content' );
-	unregister_block_type( 'core/comment-date' );
-	unregister_block_type( 'core/comment-edit-link' );
-	unregister_block_type( 'core/comment-reply-link' );
-	unregister_block_type( 'core/comment-template' );
-	unregister_block_type( 'core/comments-pagination' );
-	unregister_block_type( 'core/comments-pagination-next' );
-	unregister_block_type( 'core/comments-pagination-numbers' );
-	unregister_block_type( 'core/comments-pagination-previous' );
-	unregister_block_type( 'core/comments-query-loop' );
-	unregister_block_type( 'core/comments-title' );
-	unregister_block_type( 'core/latest-comments' );
-	unregister_block_type( 'core/post-comments-form' );
-	unregister_block_type( 'core/post-comments-count' ); // Gutenberg only.
-	unregister_block_type( 'core/post-comments-link' ); // Gutenberg only.
+	$blocks = [
+		'core/comments',
+		'core/comments-query-loop', // Replaced by core/comments in Gutenberg 13.7.
+
+		'core/comment-author-avatar',
+		'core/comment-author-name',
+		'core/comment-content',
+		'core/comment-date',
+		'core/comment-edit-link',
+		'core/comment-reply-link',
+		'core/comment-template',
+
+		'core/comments-pagination',
+		'core/comments-pagination-next',
+		'core/comments-pagination-numbers',
+		'core/comments-pagination-previous',
+		'core/comments-title',
+
+		'core/latest-comments',
+
+		'core/post-comment',
+		'core/post-comments-count',
+		'core/post-comments-form',
+		'core/post-comments-link',
+	];
+
+	foreach ( $blocks as $block ) {
+		unregister_block_type( $block );
+	}
 }
 
 /**
@@ -133,7 +146,7 @@ function unregister_comment_blocks() {
  * side menu in the dashboard.
  */
 function remove_comments_menu_page() {
-	remove_menu_page('edit-comments.php');
+	remove_menu_page( 'edit-comments.php' );
 	remove_submenu_page( 'options-general.php', 'options-discussion.php' );
 }
 
