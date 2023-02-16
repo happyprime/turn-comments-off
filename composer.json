@@ -1,0 +1,30 @@
+{
+	"name": "happyprime/turn-comments-off",
+	"description": "Turn comments off everywhere in WordPress",
+	"version": "1.2.0",
+	"type": "wordpress-plugin",
+	"license": "GPLv2+",
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"composer/installers": true
+		}
+	},
+	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+		"phpcompatibility/php-compatibility": "^9.3",
+		"phpcompatibility/phpcompatibility-wp": "*",
+		"phpunit/phpunit": "^5 || ^7 || ^8 || ^9",
+		"sirbrillig/phpcs-variable-analysis": "^2.11",
+		"yoast/phpunit-polyfills": "^1.0",
+		"wp-cli/dist-archive-command": "^2.0",
+		"wp-coding-standards/wpcs": "dev-develop"
+	},
+	"scripts": {
+		"phpcs": "vendor/bin/phpcs",
+		"lint": "vendor/bin/phpcs",
+		"phpcbf": "vendor/bin/phpcbf",
+		"fix": "vendor/bin/phpcbf",
+		"test": "vendor/bin/phpunit"
+	}
+}
