@@ -20,6 +20,13 @@ If you find something we missed, [please let us know](https://github.com/happypr
 
 ## Changelog
 
+### 1.2.1
+
+* No functional changes, only custodial.
+* Confirm WordPress 6.2 support.
+* Update `wordpress/scripts` dependency to 26.1.0.
+* Improve linting configuration.
+
 ### 1.2.0
 
 * Update the list of blocks unregistered to include latest from Gutenberg and WordPress.

@@ -2,8 +2,8 @@
 Contributors: happyprime, jeremyfelt, slocker, philcable, wpgirl369
 Tags: comments
 Requires at least: 5.9
-Tested up to: 6.1
-Stable tag: 1.2.0
+Tested up to: 6.2
+Stable tag: 1.2.1
 License: GPLv2 or later
 Requires PHP: 5.6
 
@@ -26,6 +26,13 @@ No configuration necessary (or available).
 If you find something we missed, [please let us know](https://github.com/happyprime/turn-comments-off)!
 
 ## Changelog
+
+### 1.2.1
+
+* No functional changes, only custodial.
+* Confirm WordPress 6.2 support.
+* Update `wordpress/scripts` dependency to 26.1.0.
+* Improve linting configuration.
 
 ### 1.2.0
 
