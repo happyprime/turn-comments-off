@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Turn Comments Off
  * Description:  Turn comments off everywhere in WordPress.
- * Version:      1.2.0
+ * Version:      1.2.1
  * Plugin URI:   https://github.com/happyprime/turn-comments-off/
  * Author:       Happy Prime
  * Author URI:   https://happyprime.co
@@ -18,6 +18,8 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ *
+ * @package turn-comments-off
  */
 
 namespace TurnCommentsOff;
@@ -49,7 +51,7 @@ add_filter( 'comments_rewrite_rules', '__return_empty_array' );
 add_action( 'init', __NAMESPACE__ . '\remove_comment_support', 99 );
 add_action( 'init', __NAMESPACE__ . '\remove_trackback_support', 99 );
 
-// Remove comment blocks from the editor. (Twice to be sure!)
+// Remove comment blocks from the editor. (Twice to be sure!).
 add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\unregister_comment_blocks_javascript' );
 add_action( 'init', __NAMESPACE__ . '\unregister_comment_blocks', 99 );
 

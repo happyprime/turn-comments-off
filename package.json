@@ -1,6 +1,6 @@
 {
   "name": "turn-comments-off",
-  "version": "1.1.1",
+  "version": "1.2.1",
   "description": "Turn comments off everywhere in WordPress",
   "scripts": {
     "build": "wp-scripts build",
@@ -18,6 +18,6 @@
   },
   "homepage": "https://github.com/happyprime/turn-comments-off#readme",
   "devDependencies": {
-    "@wordpress/scripts": "^24.6.0"
+    "@wordpress/scripts": "^26.1.0"
   }
 }
