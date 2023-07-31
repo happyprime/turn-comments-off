@@ -58,6 +58,7 @@ add_action( 'init', __NAMESPACE__ . '\unregister_comment_blocks', 99 );
 // And disable all comment related views in the admin.
 add_filter( 'wp_count_comments', __NAMESPACE__ . '\filter_wp_count_comments' );
 add_action( 'add_admin_bar_menus', __NAMESPACE__ . '\remove_admin_bar_comments_menu' );
+add_action( 'admin_bar_menu', __NAMESPACE__ . '\remove_my_sites_comments_menu', 21 );
 add_action( 'admin_menu', __NAMESPACE__ . '\remove_comments_menu_page' );
 add_action( 'load-options-discussion.php', __NAMESPACE__ . '\block_comments_admin_screen' );
 add_action( 'load-edit-comments.php', __NAMESPACE__ . '\block_comments_admin_screen' );
@@ -163,6 +164,19 @@ function remove_comments_menu_page() {
  */
 function remove_admin_bar_comments_menu() {
 	remove_action( 'admin_bar_menu', 'wp_admin_bar_comments_menu', 60 );
+}
+
+/**
+ * Remove the "Manage Comments" node from each site's menu under My Sites.
+ */
+function remove_my_sites_comments_menu() {
+	global $wp_admin_bar;
+
+	foreach ( $wp_admin_bar->get_nodes() as $node_id => $node ) {
+		if ( str_starts_with( $node_id, 'blog-' ) && str_ends_with( $node_id, '-c' ) ) {
+			$wp_admin_bar->remove_node( $node_id );
+		}
+	}
 }
 
 /**
