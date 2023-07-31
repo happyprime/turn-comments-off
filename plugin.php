@@ -172,6 +172,16 @@ function remove_admin_bar_comments_menu() {
 function remove_my_sites_comments_menu() {
 	global $wp_admin_bar;
 
+	// Only parse for the menu if it's going to be there, part 1.
+	if ( ! is_user_logged_in() || ! is_multisite() ) {
+		return;
+	}
+
+	// Only parse for the menu if it's going to be there, part 2.
+	if ( count( $wp_admin_bar->user->blogs ) < 1 && ! current_user_can( 'manage_network' ) ) {
+		return;
+	}
+
 	foreach ( $wp_admin_bar->get_nodes() as $node_id => $node ) {
 		if ( str_starts_with( $node_id, 'blog-' ) && str_ends_with( $node_id, '-c' ) ) {
 			$wp_admin_bar->remove_node( $node_id );
