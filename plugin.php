@@ -178,13 +178,23 @@ function remove_my_sites_comments_menu() {
 	}
 
 	// Only parse for the menu if it's going to be there, part 2.
-	if ( count( $wp_admin_bar->user->blogs ) < 1 && ! current_user_can( 'manage_network' ) ) {
+	if ( count( $wp_admin_bar->user->blogs ) < 1 ) {
 		return;
 	}
 
-	foreach ( $wp_admin_bar->get_nodes() as $node_id => $node ) {
-		if ( str_starts_with( $node_id, 'blog-' ) && str_ends_with( $node_id, '-c' ) ) {
-			$wp_admin_bar->remove_node( $node_id );
+	$network_active = is_plugin_active_for_network( plugin_basename( __FILE__ ) );
+
+	foreach ( $wp_admin_bar->user->blogs as $blog ) {
+		if ( ! $network_active ) {
+			switch_to_blog( $blog->userblog_id );
+		}
+
+		if ( $network_active || is_plugin_active( plugin_basename( __FILE__ ) ) ) {
+			$wp_admin_bar->remove_menu( 'blog-' . $blog->userblog_id . '-c' );
+		}
+
+		if ( ! $network_active ) {
+			restore_current_blog();
 		}
 	}
 }
