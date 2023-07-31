@@ -2,6 +2,7 @@
 .github/
 .gitignore
 .distignore
+.wordpress-org/
 node_modules/
 vendor/
 composer.json
