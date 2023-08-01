@@ -58,6 +58,7 @@ add_action( 'init', __NAMESPACE__ . '\unregister_comment_blocks', 99 );
 // And disable all comment related views in the admin.
 add_filter( 'wp_count_comments', __NAMESPACE__ . '\filter_wp_count_comments' );
 add_action( 'add_admin_bar_menus', __NAMESPACE__ . '\remove_admin_bar_comments_menu' );
+add_action( 'admin_bar_menu', __NAMESPACE__ . '\remove_my_sites_comments_menu', 21 );
 add_action( 'admin_menu', __NAMESPACE__ . '\remove_comments_menu_page' );
 add_action( 'load-options-discussion.php', __NAMESPACE__ . '\block_comments_admin_screen' );
 add_action( 'load-edit-comments.php', __NAMESPACE__ . '\block_comments_admin_screen' );
@@ -163,6 +164,44 @@ function remove_comments_menu_page() {
  */
 function remove_admin_bar_comments_menu() {
 	remove_action( 'admin_bar_menu', 'wp_admin_bar_comments_menu', 60 );
+}
+
+/**
+ * Remove the "Manage Comments" node from each site's menu under My Sites.
+ */
+function remove_my_sites_comments_menu() {
+	global $wp_admin_bar;
+
+	// Only parse for the menu if it's going to be there, part 1.
+	if ( ! is_user_logged_in() || ! is_multisite() ) {
+		return;
+	}
+
+	// Only parse for the menu if it's going to be there, part 2.
+	if ( count( $wp_admin_bar->user->blogs ) < 1 ) {
+		return;
+	}
+
+	// The plugin API is not always available on the front-end.
+	if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+		require_once ABSPATH . '/wp-admin/includes/plugin.php';
+	}
+
+	$network_active = is_plugin_active_for_network( plugin_basename( __FILE__ ) );
+
+	foreach ( $wp_admin_bar->user->blogs as $blog ) {
+		if ( ! $network_active ) {
+			switch_to_blog( $blog->userblog_id );
+		}
+
+		if ( $network_active || is_plugin_active( plugin_basename( __FILE__ ) ) ) {
+			$wp_admin_bar->remove_menu( 'blog-' . $blog->userblog_id . '-c' );
+		}
+
+		if ( ! $network_active ) {
+			restore_current_blog();
+		}
+	}
 }
 
 /**
