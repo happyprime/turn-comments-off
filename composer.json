@@ -12,8 +12,7 @@
 	},
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "*",
-		"phpcompatibility/php-compatibility": "*",
-		"phpcompatibility/phpcompatibility-wp": "*",
+		"phpcompatibility/php-compatibility": "dev-develop",
 		"sirbrillig/phpcs-variable-analysis": "*",
 		"wp-cli/dist-archive-command": "^2.0",
 		"wp-coding-standards/wpcs": "dev-develop"
