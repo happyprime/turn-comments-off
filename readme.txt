@@ -2,8 +2,8 @@
 Contributors: happyprime, jeremyfelt, slocker, philcable, wpgirl369
 Tags: comments
 Requires at least: 5.9
-Tested up to: 6.2
-Stable tag: 1.2.1
+Tested up to: 6.3
+Stable tag: 1.3.0
 License: GPLv2 or later
 Requires PHP: 5.6
 
@@ -26,6 +26,13 @@ No configuration necessary (or available).
 If you find something we missed, [please let us know](https://github.com/happyprime/turn-comments-off)!
 
 ## Changelog
+
+### 1.3.0
+
+* Remove "Manage Comments" from site menus under My Sites on multisite.
+* Confirm WordPress 6.3 support.
+* Update `wordpress/scripts` dependency to 26.9.0.
+* Improve linting configuration.
 
 ### 1.2.1
 

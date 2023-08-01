@@ -20,6 +20,13 @@ If you find something we missed, [please let us know](https://github.com/happypr
 
 ## Changelog
 
+### 1.3.0
+
+* Remove "Manage Comments" from site menus under My Sites on multisite.
+* Confirm WordPress 6.3 support.
+* Update `wordpress/scripts` dependency to 26.9.0.
+* Improve linting configuration.
+
 ### 1.2.1
 
 * No functional changes, only custodial.
