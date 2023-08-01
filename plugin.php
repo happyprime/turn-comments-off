@@ -182,6 +182,11 @@ function remove_my_sites_comments_menu() {
 		return;
 	}
 
+	// The plugin API is not always available on the front-end.
+	if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+		require_once ABSPATH . '/wp-admin/includes/plugin.php';
+	}
+
 	$network_active = is_plugin_active_for_network( plugin_basename( __FILE__ ) );
 
 	foreach ( $wp_admin_bar->user->blogs as $blog ) {
