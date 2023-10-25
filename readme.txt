@@ -1,11 +1,11 @@
 # Turn Comments Off
-Contributors: happyprime, jeremyfelt, slocker, philcable, wpgirl369
+Contributors: happyprime, jeremyfelt, slocker, philcable
 Tags: comments
 Requires at least: 5.9
-Tested up to: 6.3
+Tested up to: 6.4
 Stable tag: 1.3.0
 License: GPLv2 or later
-Requires PHP: 5.6
+Requires PHP: 7.4
 
 Turn comments off everywhere in WordPress.
 
@@ -30,8 +30,8 @@ If you find something we missed, [please let us know](https://github.com/happypr
 ### 1.3.0
 
 * Remove "Manage Comments" from site menus under My Sites on multisite.
-* Confirm WordPress 6.3 support.
-* Update `wordpress/scripts` dependency to 26.9.0.
+* Confirm WordPress 6.4 support.
+* Update `wordpress/scripts` dependency to 26.15.0.
 * Improve linting configuration.
 
 ### 1.2.1
