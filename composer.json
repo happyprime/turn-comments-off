@@ -7,20 +7,28 @@
 	"config": {
 		"allow-plugins": {
 			"dealerdirect/phpcodesniffer-composer-installer": true,
-			"composer/installers": true
+			"composer/installers": true,
+			"phpstan/extension-installer": true
+		},
+		"platform": {
+			"php": "7.4"
 		}
 	},
 	"require-dev": {
+		"wp-coding-standards/wpcs": "*",
 		"dealerdirect/phpcodesniffer-composer-installer": "*",
-		"phpcompatibility/php-compatibility": "dev-develop",
+		"phpcompatibility/php-compatibility": "dev-develop as 9.99.99",
+		"phpcompatibility/phpcompatibility-wp": "*",
 		"sirbrillig/phpcs-variable-analysis": "*",
-		"wp-cli/dist-archive-command": "^2.0",
-		"wp-coding-standards/wpcs": "dev-develop"
+		"phpstan/phpstan": "^1.10",
+		"szepeviktor/phpstan-wordpress": "^1.3",
+		"phpstan/extension-installer": "^1.3",
+		"phpstan/phpstan-phpunit": "^1.3",
+		"php-stubs/wordpress-tests-stubs": "^6.2"
 	},
 	"scripts": {
 		"phpcs": "vendor/bin/phpcs",
-		"lint": "vendor/bin/phpcs",
 		"phpcbf": "vendor/bin/phpcbf",
-		"fix": "vendor/bin/phpcbf"
+		"phpstan": "vendor/bin/phpstan analyse --memory-limit=2048M"
 	}
 }

@@ -7,7 +7,7 @@
  * Author:       Happy Prime
  * Author URI:   https://happyprime.co
  * Text Domain:  turn-comments-off
- * Requires PHP: 5.6
+ * Requires PHP: 7.4
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,7 +67,7 @@ add_action( 'load-edit-comments.php', __NAMESPACE__ . '\block_comments_admin_scr
  * Remove comments support from all post types that have registered
  * it by priority 99 on init.
  */
-function remove_comment_support() {
+function remove_comment_support(): void {
 	$post_types = get_post_types_by_support( 'comments' );
 
 	foreach ( $post_types as $post_type ) {
@@ -79,7 +79,7 @@ function remove_comment_support() {
  * Remove trackbacks support from all post types that have registered
  * it by priority 99 on init.
  */
-function remove_trackback_support() {
+function remove_trackback_support(): void {
 	$post_types = get_post_types_by_support( 'trackbacks' );
 
 	foreach ( $post_types as $post_type ) {
@@ -93,7 +93,7 @@ function remove_trackback_support() {
  *
  * @since 1.1.0
  */
-function unregister_comment_blocks_javascript() {
+function unregister_comment_blocks_javascript(): void {
 	$asset_data = include_once __DIR__ . '/build/index.asset.php';
 
 	wp_enqueue_script(
@@ -112,7 +112,7 @@ function unregister_comment_blocks_javascript() {
  *
  * @since 1.1.0
  */
-function unregister_comment_blocks() {
+function unregister_comment_blocks(): void {
 
 	// Retrieve all registered blocks.
 	$registered_blocks = \WP_Block_Type_Registry::get_instance()->get_all_registered();
@@ -154,7 +154,7 @@ function unregister_comment_blocks() {
  * Remove the "Comments" and Settings -> Discussion menus from the
  * side menu in the dashboard.
  */
-function remove_comments_menu_page() {
+function remove_comments_menu_page(): void {
 	remove_menu_page( 'edit-comments.php' );
 	remove_submenu_page( 'options-general.php', 'options-discussion.php' );
 }
@@ -162,14 +162,14 @@ function remove_comments_menu_page() {
 /**
  * Remove the comments menu from the admin bar.
  */
-function remove_admin_bar_comments_menu() {
+function remove_admin_bar_comments_menu(): void {
 	remove_action( 'admin_bar_menu', 'wp_admin_bar_comments_menu', 60 );
 }
 
 /**
  * Remove the "Manage Comments" node from each site's menu under My Sites.
  */
-function remove_my_sites_comments_menu() {
+function remove_my_sites_comments_menu(): void {
 	global $wp_admin_bar;
 
 	// Only parse for the menu if it's going to be there, part 1.
@@ -209,9 +209,9 @@ function remove_my_sites_comments_menu() {
  *
  * This hides Recent Comments from the dashboard activity widget.
  *
- * @return stdClass An object with expected count properties.
+ * @return \stdClass An object with expected count properties.
  */
-function filter_wp_count_comments() {
+function filter_wp_count_comments(): \stdClass {
 	return (object) array(
 		'approved'       => 0,
 		'moderated'      => 0,
@@ -227,7 +227,6 @@ function filter_wp_count_comments() {
  * Block access to the Settings -> Discussion and Edit Comments views
  * in the admin.
  */
-function block_comments_admin_screen() {
+function block_comments_admin_screen(): void {
 	wp_die( esc_html__( 'This screen is disabled by the Turn Comments Off plugin.', 'turn-comments-off' ) );
-	exit;
 }
