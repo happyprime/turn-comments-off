@@ -168,6 +168,8 @@ function remove_admin_bar_comments_menu(): void {
 
 /**
  * Remove the "Manage Comments" node from each site's menu under My Sites.
+ *
+ * @since 1.3.0
  */
 function remove_my_sites_comments_menu(): void {
 	global $wp_admin_bar;
@@ -187,20 +189,13 @@ function remove_my_sites_comments_menu(): void {
 		require_once ABSPATH . '/wp-admin/includes/plugin.php';
 	}
 
-	$network_active = is_plugin_active_for_network( plugin_basename( __FILE__ ) );
+	// We can't accurately remove the menu item if the plugin is not network activated.
+	if ( ! is_plugin_active_for_network( plugin_basename( __FILE__ ) ) ) {
+		return;
+	}
 
 	foreach ( $wp_admin_bar->user->blogs as $blog ) {
-		if ( ! $network_active ) {
-			switch_to_blog( $blog->userblog_id );
-		}
-
-		if ( $network_active || is_plugin_active( plugin_basename( __FILE__ ) ) ) {
-			$wp_admin_bar->remove_menu( 'blog-' . $blog->userblog_id . '-c' );
-		}
-
-		if ( ! $network_active ) {
-			restore_current_blog();
-		}
+		$wp_admin_bar->remove_menu( 'blog-' . $blog->userblog_id . '-c' );
 	}
 }
 
