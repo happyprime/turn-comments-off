@@ -13,12 +13,20 @@ Activate this plugin to immediately remove all comment functionality from WordPr
 * Remove "Recent Comments" from the site activity dashboard widget.
 * Remove the comments feed link.
 * Unregister all core comment blocks in the editor.
+* Remove "Manage Comments" from My Sites on multisite. (If network activated.)
 
 No configuration necessary (or available).
 
 If you find something we missed, [please let us know](https://github.com/happyprime/turn-comments-off)!
 
 ## Changelog
+
+### 1.3.0
+
+* Remove "Manage Comments" from site menus under My Sites on multisite.
+* Confirm WordPress 6.4 support.
+* Update `wordpress/scripts` dependency to 26.15.0.
+* Improve linting configuration.
 
 ### 1.2.1
 
