@@ -175,7 +175,7 @@ function remove_my_sites_comments_menu(): void {
 	global $wp_admin_bar;
 
 	// Only parse for the menu if it's going to be there, part 1.
-	if ( ! is_user_logged_in() || ! is_multisite() ) {
+	if ( ! is_multisite() || ! is_user_logged_in() ) {
 		return;
 	}
 
