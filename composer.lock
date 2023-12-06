@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "542816fa1ef3e686a8f14fbb115b6407",
+    "content-hash": "6d03a58fee82f210c56aa0f6a6eb2af0",
     "packages": [],
     "packages-dev": [
         {
@@ -87,30 +87,34 @@
         },
         {
             "name": "happyprime/coding-standards",
-            "version": "dev-trunk",
+            "version": "0.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/happyprime/coding-standards.git",
-                "reference": "a84c497abf2daf3942bcf4629d62e4e83e3a09a6"
+                "reference": "b0b2bc5dac135174b608ae101e35fda7dde0f389"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/happyprime/coding-standards/zipball/a84c497abf2daf3942bcf4629d62e4e83e3a09a6",
-                "reference": "a84c497abf2daf3942bcf4629d62e4e83e3a09a6",
+                "url": "https://api.github.com/repos/happyprime/coding-standards/zipball/b0b2bc5dac135174b608ae101e35fda7dde0f389",
+                "reference": "b0b2bc5dac135174b608ae101e35fda7dde0f389",
                 "shasum": ""
             },
             "require": {
                 "dealerdirect/phpcodesniffer-composer-installer": "*",
                 "php": ">=7.4",
+                "php-stubs/wordpress-tests-stubs": "^6.2",
                 "phpcompatibility/php-compatibility": "*",
                 "phpcompatibility/phpcompatibility-wp": "*",
+                "phpstan/extension-installer": "^1.3",
+                "phpstan/phpstan": "^1.10",
+                "phpstan/phpstan-phpunit": "^1.3",
                 "sirbrillig/phpcs-variable-analysis": "*",
+                "szepeviktor/phpstan-wordpress": "^1.3",
                 "wp-coding-standards/wpcs": "*"
             },
             "suggest": {
                 "dealerdirect/phpcodesniffer-composer-installer": "Automatically adds this package's ruleset to the installed_paths option of PHP_CodeSniffer"
             },
-            "default-branch": true,
             "type": "phpcodesniffer-standard",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -119,9 +123,9 @@
             "description": "Happy Prime coding standards",
             "support": {
                 "issues": "https://github.com/happyprime/coding-standards/issues",
-                "source": "https://github.com/happyprime/coding-standards/tree/trunk"
+                "source": "https://github.com/happyprime/coding-standards/tree/0.0.1"
             },
-            "time": "2023-12-06T16:27:41+00:00"
+            "time": "2023-12-06T22:14:21+00:00"
         },
         {
             "name": "php-stubs/wordpress-stubs",
@@ -1040,7 +1044,6 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "happyprime/coding-standards": 20,
         "phpcompatibility/php-compatibility": 20
     },
     "prefer-stable": false,

@@ -15,13 +15,8 @@
 		}
 	},
 	"require-dev": {
-		"happyprime/coding-standards": "dev-trunk",
-		"phpcompatibility/php-compatibility": "dev-develop as 9.99.99",
-		"phpstan/phpstan": "^1.10",
-		"szepeviktor/phpstan-wordpress": "^1.3",
-		"phpstan/extension-installer": "^1.3",
-		"phpstan/phpstan-phpunit": "^1.3",
-		"php-stubs/wordpress-tests-stubs": "^6.2"
+		"happyprime/coding-standards": "^0.0.1",
+		"phpcompatibility/php-compatibility": "dev-develop as 9.99.99"
 	},
 	"scripts": {
 		"phpcs": "vendor/bin/phpcs",
