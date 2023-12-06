@@ -1,11 +1,5 @@
+includes:
+  - %rootDir%/../../happyprime/coding-standards/phpstan.neon.dist
+
 parameters:
   level: 9
-  paths:
-    - ./
-  scanFiles:
-      - %rootDir%/../../php-stubs/wordpress-stubs/wordpress-stubs.php
-      - %rootDir%/../../php-stubs/wordpress-tests-stubs/wordpress-tests-stubs.php
-  excludePaths:
-    - vendor
-    - node_modules
-  ignoreErrors:
