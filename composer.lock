@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0af8b8056da8766037ebed81b5f7aff9",
+    "content-hash": "542816fa1ef3e686a8f14fbb115b6407",
     "packages": [],
     "packages-dev": [
         {
@@ -86,26 +86,66 @@
             "time": "2023-01-05T11:28:13+00:00"
         },
         {
-            "name": "php-stubs/wordpress-stubs",
-            "version": "v6.3.2",
+            "name": "happyprime/coding-standards",
+            "version": "dev-trunk",
             "source": {
                 "type": "git",
-                "url": "https://github.com/php-stubs/wordpress-stubs.git",
-                "reference": "f22b00cacd3b9addc2b07ff48290084503c48574"
+                "url": "https://github.com/happyprime/coding-standards.git",
+                "reference": "a84c497abf2daf3942bcf4629d62e4e83e3a09a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/f22b00cacd3b9addc2b07ff48290084503c48574",
-                "reference": "f22b00cacd3b9addc2b07ff48290084503c48574",
+                "url": "https://api.github.com/repos/happyprime/coding-standards/zipball/a84c497abf2daf3942bcf4629d62e4e83e3a09a6",
+                "reference": "a84c497abf2daf3942bcf4629d62e4e83e3a09a6",
+                "shasum": ""
+            },
+            "require": {
+                "dealerdirect/phpcodesniffer-composer-installer": "*",
+                "php": ">=7.4",
+                "phpcompatibility/php-compatibility": "*",
+                "phpcompatibility/phpcompatibility-wp": "*",
+                "sirbrillig/phpcs-variable-analysis": "*",
+                "wp-coding-standards/wpcs": "*"
+            },
+            "suggest": {
+                "dealerdirect/phpcodesniffer-composer-installer": "Automatically adds this package's ruleset to the installed_paths option of PHP_CodeSniffer"
+            },
+            "default-branch": true,
+            "type": "phpcodesniffer-standard",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "Happy Prime coding standards",
+            "support": {
+                "issues": "https://github.com/happyprime/coding-standards/issues",
+                "source": "https://github.com/happyprime/coding-standards/tree/trunk"
+            },
+            "time": "2023-12-06T16:27:41+00:00"
+        },
+        {
+            "name": "php-stubs/wordpress-stubs",
+            "version": "v6.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-stubs/wordpress-stubs.git",
+                "reference": "6d6063cf9464a306ca2a0529705d41312b08500b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/6d6063cf9464a306ca2a0529705d41312b08500b",
+                "reference": "6d6063cf9464a306ca2a0529705d41312b08500b",
                 "shasum": ""
             },
             "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
                 "nikic/php-parser": "^4.13",
                 "php": "^7.4 || ~8.0.0",
                 "php-stubs/generator": "^0.8.3",
                 "phpdocumentor/reflection-docblock": "^5.3",
                 "phpstan/phpstan": "^1.10.12",
-                "phpunit/phpunit": "^9.5"
+                "phpunit/phpunit": "^9.5",
+                "szepeviktor/phpcs-psr-12-neutron-hybrid-ruleset": "^0.8"
             },
             "suggest": {
                 "paragonie/sodium_compat": "Pure PHP implementation of libsodium",
@@ -126,9 +166,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/wordpress-stubs/issues",
-                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.3.2"
+                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.4.1"
             },
-            "time": "2023-10-14T10:08:05+00:00"
+            "time": "2023-11-10T00:33:47+00:00"
         },
         {
             "name": "php-stubs/wordpress-tests-stubs",
@@ -176,12 +216,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCompatibility/PHPCompatibility.git",
-                "reference": "302dffedd8f1acfc0ed5c7ee096ea2237553ae1a"
+                "reference": "34a67f7eb4ec715df26d90429ea8cce88e0b38ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibility/zipball/302dffedd8f1acfc0ed5c7ee096ea2237553ae1a",
-                "reference": "302dffedd8f1acfc0ed5c7ee096ea2237553ae1a",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibility/zipball/34a67f7eb4ec715df26d90429ea8cce88e0b38ff",
+                "reference": "34a67f7eb4ec715df26d90429ea8cce88e0b38ff",
                 "shasum": ""
             },
             "require": {
@@ -241,9 +281,10 @@
             ],
             "support": {
                 "issues": "https://github.com/PHPCompatibility/PHPCompatibility/issues",
+                "security": "https://github.com/PHPCompatibility/PHPCompatibility/security/policy",
                 "source": "https://github.com/PHPCompatibility/PHPCompatibility"
             },
-            "time": "2023-09-13T12:40:15+00:00"
+            "time": "2023-12-04T17:28:03+00:00"
         },
         {
             "name": "phpcompatibility/phpcompatibility-paragonie",
@@ -359,16 +400,16 @@
         },
         {
             "name": "phpcsstandards/phpcsextra",
-            "version": "1.1.2",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSExtra.git",
-                "reference": "746c3190ba8eb2f212087c947ba75f4f5b9a58d5"
+                "reference": "78b2cae1e9de1c05f0416de6f9a658cbb83ac324"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/746c3190ba8eb2f212087c947ba75f4f5b9a58d5",
-                "reference": "746c3190ba8eb2f212087c947ba75f4f5b9a58d5",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/78b2cae1e9de1c05f0416de6f9a658cbb83ac324",
+                "reference": "78b2cae1e9de1c05f0416de6f9a658cbb83ac324",
                 "shasum": ""
             },
             "require": {
@@ -416,9 +457,24 @@
             ],
             "support": {
                 "issues": "https://github.com/PHPCSStandards/PHPCSExtra/issues",
+                "security": "https://github.com/PHPCSStandards/PHPCSExtra/security/policy",
                 "source": "https://github.com/PHPCSStandards/PHPCSExtra"
             },
-            "time": "2023-09-20T22:06:18+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/PHPCSStandards",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/jrfnl",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/php_codesniffer",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2023-12-02T14:30:12+00:00"
         },
         {
             "name": "phpcsstandards/phpcsutils",
@@ -539,16 +595,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.39",
+            "version": "1.10.47",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "d9dedb0413f678b4d03cbc2279a48f91592c97c4"
+                "reference": "84dbb33b520ea28b6cf5676a3941f4bae1c1ff39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d9dedb0413f678b4d03cbc2279a48f91592c97c4",
-                "reference": "d9dedb0413f678b4d03cbc2279a48f91592c97c4",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/84dbb33b520ea28b6cf5676a3941f4bae1c1ff39",
+                "reference": "84dbb33b520ea28b6cf5676a3941f4bae1c1ff39",
                 "shasum": ""
             },
             "require": {
@@ -597,7 +653,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-10-17T15:46:26+00:00"
+            "time": "2023-12-01T15:19:17+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -984,6 +1040,7 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
+        "happyprime/coding-standards": 20,
         "phpcompatibility/php-compatibility": 20
     },
     "prefer-stable": false,

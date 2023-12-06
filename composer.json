@@ -15,11 +15,8 @@
 		}
 	},
 	"require-dev": {
-		"wp-coding-standards/wpcs": "*",
-		"dealerdirect/phpcodesniffer-composer-installer": "*",
+		"happyprime/coding-standards": "dev-trunk",
 		"phpcompatibility/php-compatibility": "dev-develop as 9.99.99",
-		"phpcompatibility/phpcompatibility-wp": "*",
-		"sirbrillig/phpcs-variable-analysis": "*",
 		"phpstan/phpstan": "^1.10",
 		"szepeviktor/phpstan-wordpress": "^1.3",
 		"phpstan/extension-installer": "^1.3",
