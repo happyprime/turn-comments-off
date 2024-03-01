@@ -15,7 +15,7 @@
 		}
 	},
 	"require-dev": {
-		"happyprime/coding-standards": "^0.0.1",
+		"happyprime/coding-standards": "*",
 		"phpcompatibility/php-compatibility": "dev-develop as 9.99.99"
 	},
 	"scripts": {
