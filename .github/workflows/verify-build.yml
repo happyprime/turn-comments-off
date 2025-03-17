@@ -1,5 +1,5 @@
 # This file is managed in https://github.com/happyprime/projects
-name: Verify build (Node 20)
+name: Verify build (Node 22)
 
 on: pull_request
 
@@ -16,4 +16,4 @@ jobs:
   call-workflow:
     uses: happyprime/workflows/.github/workflows/verify-build.yml@trunk
     with:
-      node-version: 20
+      node-version: 22
