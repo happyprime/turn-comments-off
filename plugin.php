@@ -67,7 +67,7 @@ add_action( 'load-edit-comments.php', __NAMESPACE__ . '\block_comments_admin_scr
  * Filter the comments pre query.
  *
  * @param array<int,\WP_Comment>|int|null $comments The comments to filter.
- * @param \WP_Comment_Query $query The query object.
+ * @param \WP_Comment_Query               $query The query object.
  * @return array<int,\WP_Comment>|int The filtered comments.
  */
 function filter_comments_pre_query( $comments, \WP_Comment_Query $query ) {
