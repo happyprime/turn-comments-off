@@ -38,8 +38,8 @@ add_filter( 'pings_open', '__return_false' );
 // No content has an existing comment.
 add_filter( 'get_comments_number', '__return_zero' );
 
-// So return an empty set of comments for all comment queries.
-add_filter( 'comments_pre_query', '__return_empty_array' );
+// So return an empty set or count of comments for all comment queries.
+add_filter( 'comments_pre_query', __NAMESPACE__ . '\filter_comments_pre_query', 10, 2 );
 
 // And disable the comments feed.
 add_filter( 'feed_links_show_comments_feed', '__return_false' );
@@ -62,6 +62,21 @@ add_action( 'admin_bar_menu', __NAMESPACE__ . '\remove_my_sites_comments_menu', 
 add_action( 'admin_menu', __NAMESPACE__ . '\remove_comments_menu_page' );
 add_action( 'load-options-discussion.php', __NAMESPACE__ . '\block_comments_admin_screen' );
 add_action( 'load-edit-comments.php', __NAMESPACE__ . '\block_comments_admin_screen' );
+
+/**
+ * Filter the comments pre query.
+ *
+ * @param array<int,\WP_Comment>|int|null $comments The comments to filter.
+ * @param \WP_Comment_Query $query The query object.
+ * @return array<int,\WP_Comment>|int The filtered comments.
+ */
+function filter_comments_pre_query( $comments, \WP_Comment_Query $query ) {
+	if ( $query->query_vars['count'] ) {
+		return 0;
+	}
+
+	return [];
+}
 
 /**
  * Remove comments support from all post types that have registered
