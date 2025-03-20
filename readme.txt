@@ -3,7 +3,7 @@ Contributors: happyprime, jeremyfelt, slocker, philcable
 Tags: comments
 Requires at least: 5.9
 Tested up to: 6.7
-Stable tag: 1.3.2
+Stable tag: 2.0.0
 License: GPLv2 or later
 Requires PHP: 7.4
 
@@ -27,6 +27,14 @@ No configuration necessary (or available).
 If you find something we missed, [please let us know](https://github.com/happyprime/turn-comments-off)!
 
 ## Changelog
+
+### 2.0.0
+
+* Fix a fatal PHP error when a comment query requests a count.
+* Note: If you had manually removed our `comments_pre_query` filter for any reason,
+  (you likely weren't), you'll need to adjust your code to account for the new
+  namespaced function.
+* Update development dependencies.
 
 ### 1.3.2
 

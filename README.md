@@ -21,6 +21,14 @@ If you find something we missed, [please let us know](https://github.com/happypr
 
 ## Changelog
 
+### 2.0.0
+
+* Fix a fatal PHP error when a comment query requests a count.
+* Note: If you had manually removed our `comments_pre_query` filter for any reason,
+  (you likely weren't), you'll need to adjust your code to account for the new
+  namespaced function.
+* Update development dependencies.
+
 ### 1.3.2
 
 * No functional changes.
