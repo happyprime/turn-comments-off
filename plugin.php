@@ -6,6 +6,8 @@
  * Plugin URI:   https://github.com/happyprime/turn-comments-off/
  * Author:       Happy Prime
  * Author URI:   https://happyprime.co
+ * License:      GPL v2 or later
+ * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:  turn-comments-off
  * Requires PHP: 7.4
  *
