@@ -2,7 +2,7 @@
 Contributors: happyprime, jeremyfelt, slocker, philcable
 Tags: comments
 Requires at least: 5.9
-Tested up to: 6.8
+Tested up to: 6.9
 Stable tag: 2.0.0
 License: GPLv2 or later
 Requires PHP: 7.4
