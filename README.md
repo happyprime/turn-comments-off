@@ -21,6 +21,12 @@ If you find something we missed, [please let us know](https://github.com/happypr
 
 ## Changelog
 
+### 2.0.1
+
+* No functional changes.
+* Update development dependencies.
+* Confirm WordPress 6.9 support.
+
 ### 2.0.0
 
 * Fix a fatal PHP error when a comment query requests a count.
