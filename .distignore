@@ -6,8 +6,9 @@
 .wordpress-org/
 node_modules/
 vendor/
-.eslintrc.js
+.browserslistrc
 .prettierrc.js
+eslint.config.mjs
 composer.json
 composer.lock
 package.json

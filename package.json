@@ -25,7 +25,7 @@
     "@babel/plugin-transform-runtime": "^7.29.0",
     "@babel/preset-env": "^7.29.0",
     "@babel/preset-react": "^7.28.5",
-    "@happyprime/eslint-config": "^0.0.14",
+    "@happyprime/eslint-config": "^1.0.0",
     "@wordpress/browserslist-config": "^6.39.0",
     "@wordpress/dependency-extraction-webpack-plugin": "^6.39.0",
     "@wordpress/npm-package-json-lint-config": "^5.39.0",
