@@ -41,9 +41,6 @@
     "fix": "eslint . --fix",
     "lint:package": "node ./node_modules/npm-package-json-lint/dist/cli.js ./"
   },
-  "browserslist": [
-    "extends @wordpress/browserslist-config"
-  ],
   "npmpackagejsonlint": {
     "extends": "@wordpress/npm-package-json-lint-config"
   }
