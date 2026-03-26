@@ -32,14 +32,20 @@
     "babel-loader": "^10.0.0",
     "npm-package-json-lint": "^9.1.0",
     "webpack": "^5.105.1",
-    "webpack-cli": "^6.0.1"
+    "webpack-cli": "^6.0.1",
+    "@wordpress/env": "^10.0.0"
   },
   "scripts": {
     "build": "webpack --mode production",
     "start": "webpack --mode development --watch",
     "lint": "eslint .",
     "fix": "eslint . --fix",
-    "lint:package": "node ./node_modules/npm-package-json-lint/dist/cli.js ./"
+    "lint:package": "node ./node_modules/npm-package-json-lint/dist/cli.js ./",
+    "env:start": "wp-env start",
+    "env:stop": "wp-env stop",
+    "env:destroy": "wp-env destroy",
+    "env:cli": "wp-env run cli",
+    "env:logs": "wp-env logs"
   },
   "npmpackagejsonlint": {
     "extends": "@wordpress/npm-package-json-lint-config"

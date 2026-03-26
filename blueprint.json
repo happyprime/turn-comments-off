@@ -1,0 +1,19 @@
+{
+	"landingPage": "/wp-admin/options-discussion.php",
+	"preferredVersions": {
+		"php": "8.2",
+		"wp": "latest"
+	},
+	"steps": [
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "turn-comments-off"
+			}
+		},
+		{
+			"step": "login"
+		}
+	]
+}
