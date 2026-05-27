@@ -73,7 +73,7 @@ add_action( 'load-edit-comments.php', __NAMESPACE__ . '\block_comments_admin_scr
  * @return array<int,\WP_Comment>|int The filtered comments.
  */
 function filter_comments_pre_query( $comments, \WP_Comment_Query $query ) {
-	if ( $query->query_vars['count'] ) {
+	if ( ! empty( $query->query_vars['count'] ) ) {
 		return 0;
 	}
 
