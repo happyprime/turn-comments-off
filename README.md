@@ -21,6 +21,15 @@ If you find something we missed, [please let us know](https://github.com/happypr
 
 ## Changelog
 
+### 2.0.2
+
+* Fix unreliable block-unregistration asset enqueue.
+* Guard against fatal count() on admin bar blogs.
+* Guard count key in comments_pre_query filter.
+* Add over-cautious check for a valid admin bar object.
+* Update development dependencies.
+* Confirm WordPress 7.0 support.
+
 ### 2.0.1
 
 * No functional changes.
