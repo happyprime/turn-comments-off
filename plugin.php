@@ -207,7 +207,7 @@ function remove_my_sites_comments_menu(): void {
 	}
 
 	// Only parse for the menu if it's going to be there, part 2.
-	if ( count( $wp_admin_bar->user->blogs ) < 1 ) {
+	if ( empty( $wp_admin_bar->user->blogs ) || ! is_array( $wp_admin_bar->user->blogs ) ) {
 		return;
 	}
 
