@@ -111,13 +111,23 @@ function remove_trackback_support(): void {
  * @since 1.1.0
  */
 function unregister_comment_blocks_javascript(): void {
-	$asset_data = include_once __DIR__ . '/build/index.asset.php';
+	$asset_file = __DIR__ . '/build/index.asset.php';
+
+	if ( ! file_exists( $asset_file ) ) {
+		return;
+	}
+
+	$asset_data = include $asset_file;
+
+	if ( ! is_array( $asset_data ) || empty( $asset_data['dependencies'] ) ) {
+		return;
+	}
 
 	wp_enqueue_script(
 		'turn-comments-off',
-		plugin_dir_url( __FILE__ ) . '/build/index.js',
+		plugin_dir_url( __FILE__ ) . 'build/index.js',
 		$asset_data['dependencies'],
-		$asset_data['version'],
+		$asset_data['version'] ?? false,
 		true
 	);
 }
