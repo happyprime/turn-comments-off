@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Turn Comments Off
  * Description:  Turn comments off everywhere in WordPress.
- * Version:      2.0.1
+ * Version:      2.0.2
  * Plugin URI:   https://github.com/happyprime/turn-comments-off/
  * Author:       Happy Prime
  * Author URI:   https://happyprime.co
@@ -73,7 +73,7 @@ add_action( 'load-edit-comments.php', __NAMESPACE__ . '\block_comments_admin_scr
  * @return array<int,\WP_Comment>|int The filtered comments.
  */
 function filter_comments_pre_query( $comments, \WP_Comment_Query $query ) {
-	if ( $query->query_vars['count'] ) {
+	if ( ! empty( $query->query_vars['count'] ) ) {
 		return 0;
 	}
 
@@ -111,13 +111,23 @@ function remove_trackback_support(): void {
  * @since 1.1.0
  */
 function unregister_comment_blocks_javascript(): void {
-	$asset_data = include_once __DIR__ . '/build/index.asset.php';
+	$asset_file = __DIR__ . '/build/index.asset.php';
+
+	if ( ! file_exists( $asset_file ) ) {
+		return;
+	}
+
+	$asset_data = include $asset_file;
+
+	if ( ! is_array( $asset_data ) || empty( $asset_data['dependencies'] ) ) {
+		return;
+	}
 
 	wp_enqueue_script(
 		'turn-comments-off',
-		plugin_dir_url( __FILE__ ) . '/build/index.js',
+		plugin_dir_url( __FILE__ ) . 'build/index.js',
 		$asset_data['dependencies'],
-		$asset_data['version'],
+		$asset_data['version'] ?? false,
 		true
 	);
 }
@@ -197,7 +207,7 @@ function remove_my_sites_comments_menu(): void {
 	}
 
 	// Only parse for the menu if it's going to be there, part 2.
-	if ( count( $wp_admin_bar->user->blogs ) < 1 ) {
+	if ( empty( $wp_admin_bar->user->blogs ) || ! is_array( $wp_admin_bar->user->blogs ) ) {
 		return;
 	}
 
@@ -208,6 +218,11 @@ function remove_my_sites_comments_menu(): void {
 
 	// We can't accurately remove the menu item if the plugin is not network activated.
 	if ( ! is_plugin_active_for_network( plugin_basename( __FILE__ ) ) ) {
+		return;
+	}
+
+	// Over-cautious check for a valid admin bar object.
+	if ( ! is_callable( [ $wp_admin_bar, 'remove_menu' ] ) ) {
 		return;
 	}
 
