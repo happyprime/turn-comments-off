@@ -49,6 +49,9 @@ add_filter( 'feed_links_show_comments_feed', '__return_false' );
 // And remove comment rewrite rules.
 add_filter( 'comments_rewrite_rules', '__return_empty_array' );
 
+// Comment feeds still resolve without those rules, so block them outright.
+add_action( 'template_redirect', __NAMESPACE__ . '\block_comment_feeds' );
+
 // Then remove comment support from everything.
 add_action( 'init', __NAMESPACE__ . '\remove_comment_support', 99 );
 add_action( 'init', __NAMESPACE__ . '\remove_trackback_support', 99 );
@@ -78,6 +81,26 @@ function filter_comments_pre_query( $comments, \WP_Comment_Query $query ) {
 	}
 
 	return [];
+}
+
+/**
+ * Sends a 410 Gone response for any comment feed request.
+ *
+ * WP_Query builds comment feeds with its own SQL rather than
+ * WP_Comment_Query, so filter_comments_pre_query() never sees them. This
+ * covers the site-wide feed, its `?feed=comments-rss2` query string form,
+ * and the per-post `/<post>/feed/` variants.
+ */
+function block_comment_feeds(): void {
+	if ( ! is_comment_feed() ) {
+		return;
+	}
+
+	wp_die(
+		esc_html__( 'Comments are turned off on this site.', 'turn-comments-off' ),
+		esc_html__( 'Comments are turned off', 'turn-comments-off' ),
+		array( 'response' => 410 )
+	);
 }
 
 /**
