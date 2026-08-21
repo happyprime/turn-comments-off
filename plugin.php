@@ -221,11 +221,6 @@ function remove_my_sites_comments_menu( \WP_Admin_Bar $wp_admin_bar ): void {
 		return;
 	}
 
-	// Over-cautious check for a valid admin bar object.
-	if ( ! is_callable( [ $wp_admin_bar, 'remove_menu' ] ) ) {
-		return;
-	}
-
 	foreach ( $wp_admin_bar->user->blogs as $blog ) {
 		// Check for data expected to be attached to the user via `get_blogs_of_user()`.
 		if ( ! is_object( $blog ) || ! is_scalar( $blog->userblog_id ) ) {
