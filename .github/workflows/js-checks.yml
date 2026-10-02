@@ -7,7 +7,13 @@
 # This file is managed in https://github.com/happyprime/projects
 name: JavaScript checks
 
-on: pull_request
+on:
+  pull_request:
+    # A change to another workflow file is no reason to run this one.
+    paths:
+      - '**'
+      - '!.github/workflows/**'
+      - .github/workflows/js-checks.yml
 
 # The consolidated workflow comments on the pull request when a project is set
 # up for a check it cannot run. A workflow level permissions block caps what a
