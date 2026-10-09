@@ -63,6 +63,9 @@ add_action( 'init', __NAMESPACE__ . '\remove_trackback_support', 99 );
 add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\unregister_comment_blocks_javascript' );
 add_action( 'init', __NAMESPACE__ . '\unregister_comment_blocks', 99 );
 
+// An unregistered block still renders its saved markup, so render nothing instead.
+add_filter( 'pre_render_block', __NAMESPACE__ . '\skip_comment_block_render', 10, 2 );
+
 // And disable all comment related views in the admin.
 add_filter( 'wp_count_comments', __NAMESPACE__ . '\filter_wp_count_comments' );
 add_action( 'add_admin_bar_menus', __NAMESPACE__ . '\remove_admin_bar_comments_menu' );
@@ -180,18 +183,14 @@ function unregister_comment_blocks_javascript(): void {
 }
 
 /**
- * Remove any server-side registration of WordPress core comment blocks.
+ * Returns the names of the core comment blocks.
  *
- * @see unregister_comment_blocks_javascript() for client-side removal.
+ * @see src/index.js for the same list on the client.
  *
- * @since 1.1.0
+ * @return string[] Block names.
  */
-function unregister_comment_blocks(): void {
-
-	// Retrieve all registered blocks.
-	$registered_blocks = \WP_Block_Type_Registry::get_instance()->get_all_registered();
-
-	$blocks = [
+function get_comment_block_names(): array {
+	return [
 		'core/comments',
 		'core/comments-query-loop', // Replaced by core/comments in Gutenberg 13.7.
 
@@ -216,12 +215,43 @@ function unregister_comment_blocks(): void {
 		'core/post-comments-form',
 		'core/post-comments-link',
 	];
+}
 
-	foreach ( $blocks as $block ) {
+/**
+ * Remove any server-side registration of WordPress core comment blocks.
+ *
+ * @see unregister_comment_blocks_javascript() for client-side removal.
+ *
+ * @since 1.1.0
+ */
+function unregister_comment_blocks(): void {
+
+	// Retrieve all registered blocks.
+	$registered_blocks = \WP_Block_Type_Registry::get_instance()->get_all_registered();
+
+	foreach ( get_comment_block_names() as $block ) {
 		if ( isset( $registered_blocks[ $block ] ) ) {
 			unregister_block_type( $block );
 		}
 	}
+}
+
+/**
+ * Renders core comment blocks as an empty string.
+ *
+ * WordPress renders a block it does not know as its saved markup. Without
+ * this, a theme's Comments block still prints its "Comments" heading.
+ *
+ * @param string|null          $pre_render   The content to use instead of rendering the block.
+ * @param array<string, mixed> $parsed_block The block being rendered.
+ * @return string|null An empty string for a comment block, or $pre_render.
+ */
+function skip_comment_block_render( $pre_render, array $parsed_block ) {
+	if ( in_array( $parsed_block['blockName'] ?? null, get_comment_block_names(), true ) ) {
+		return '';
+	}
+
+	return $pre_render;
 }
 
 /**
