@@ -332,5 +332,9 @@ function filter_wp_count_comments(): \stdClass {
  * in the admin.
  */
 function block_comments_admin_screen(): void {
-	wp_die( esc_html__( 'This screen is disabled by the Turn Comments Off plugin.', 'turn-comments-off' ) );
+	wp_die(
+		esc_html__( 'This screen is disabled by the Turn Comments Off plugin.', 'turn-comments-off' ),
+		'',
+		array( 'response' => 403 )
+	);
 }
