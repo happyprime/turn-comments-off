@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<ruleset name="Turn Comments Off">
+	<file>.</file>
+	<exclude-pattern>build/*</exclude-pattern>
+
+	<rule ref="HappyPrime"/>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="turn-comments-off"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="TurnCommentsOff"/>
+				<element value="turn_comments_off"/>
+			</property>
+		</properties>
+	</rule>
+</ruleset>

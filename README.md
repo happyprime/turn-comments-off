@@ -19,6 +19,24 @@ No configuration necessary (or available).
 
 If you find something we missed, [please let us know](https://github.com/happyprime/turn-comments-off)!
 
+## Development
+
+```sh
+npm install
+composer install
+npm run env:start
+```
+
+The site runs at http://localhost:8990 (`admin` / `password`) on WordPress 7.1 with Twenty Twenty-Five and pretty permalinks. `env:start` runs `.dev/seed.php`, which adds:
+
+* A post with approved, pending, and spam comments.
+* A post and a "Latest comments" page built from core comment blocks.
+* A post with an editor note attached to a paragraph.
+
+`npm run env:seed` reruns the seed; it skips anything that already exists. `npm run env:stop` stops the site.
+
+Checks: `composer phpcs`, `composer phpstan`, `npm run lint:js`, `npm run lint:package`. `npm run build` rebuilds `build/` from `src/`; the build is committed.
+
 ## Changelog
 
 ### 2.0.2

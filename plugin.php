@@ -49,6 +49,12 @@ add_filter( 'feed_links_show_comments_feed', '__return_false' );
 // And remove comment rewrite rules.
 add_filter( 'comments_rewrite_rules', '__return_empty_array' );
 
+// Comment feeds still resolve without those rules, so block them outright.
+add_action( 'template_redirect', __NAMESPACE__ . '\block_comment_feeds' );
+
+// The REST API reads comments without WP_Comment_Query, so drop its routes.
+add_filter( 'rest_endpoints', __NAMESPACE__ . '\remove_comment_rest_routes' );
+
 // Then remove comment support from everything.
 add_action( 'init', __NAMESPACE__ . '\remove_comment_support', 99 );
 add_action( 'init', __NAMESPACE__ . '\remove_trackback_support', 99 );
@@ -57,6 +63,9 @@ add_action( 'init', __NAMESPACE__ . '\remove_trackback_support', 99 );
 add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\unregister_comment_blocks_javascript' );
 add_action( 'init', __NAMESPACE__ . '\unregister_comment_blocks', 99 );
 
+// An unregistered block still renders its saved markup, so render nothing instead.
+add_filter( 'pre_render_block', __NAMESPACE__ . '\skip_comment_block_render', 10, 2 );
+
 // And disable all comment related views in the admin.
 add_filter( 'wp_count_comments', __NAMESPACE__ . '\filter_wp_count_comments' );
 add_action( 'add_admin_bar_menus', __NAMESPACE__ . '\remove_admin_bar_comments_menu' );
@@ -64,6 +73,7 @@ add_action( 'admin_bar_menu', __NAMESPACE__ . '\remove_my_sites_comments_menu', 
 add_action( 'admin_menu', __NAMESPACE__ . '\remove_comments_menu_page' );
 add_action( 'load-options-discussion.php', __NAMESPACE__ . '\block_comments_admin_screen' );
 add_action( 'load-edit-comments.php', __NAMESPACE__ . '\block_comments_admin_screen' );
+add_action( 'load-comment.php', __NAMESPACE__ . '\block_comments_admin_screen' );
 
 /**
  * Filter the comments pre query.
@@ -78,6 +88,47 @@ function filter_comments_pre_query( $comments, \WP_Comment_Query $query ) {
 	}
 
 	return [];
+}
+
+/**
+ * Sends a 410 Gone response for any comment feed request.
+ *
+ * WP_Query builds comment feeds with its own SQL rather than
+ * WP_Comment_Query, so filter_comments_pre_query() never sees them. This
+ * covers the site-wide feed, its `?feed=comments-rss2` query string form,
+ * and the per-post `/<post>/feed/` variants.
+ */
+function block_comment_feeds(): void {
+	if ( ! is_comment_feed() ) {
+		return;
+	}
+
+	wp_die(
+		esc_html__( 'Comments are turned off on this site.', 'turn-comments-off' ),
+		esc_html__( 'Comments are turned off', 'turn-comments-off' ),
+		array( 'response' => 410 )
+	);
+}
+
+/**
+ * Removes the core comment routes from the REST API.
+ *
+ * WP_REST_Comments_Controller resolves a single comment with get_comment(),
+ * which never runs a WP_Comment_Query, so /wp/v2/comments/<id> returned
+ * approved comments in full. Removing the routes closes that and the write
+ * endpoints in one step; requests to them now 404 as unknown routes.
+ *
+ * @param array<string,mixed> $endpoints Endpoint handlers keyed by route.
+ * @return array<string,mixed> The remaining endpoint handlers.
+ */
+function remove_comment_rest_routes( array $endpoints ): array {
+	foreach ( array_keys( $endpoints ) as $route ) {
+		if ( 1 === preg_match( '#^/wp/v2/comments(/|$)#', (string) $route ) ) {
+			unset( $endpoints[ $route ] );
+		}
+	}
+
+	return $endpoints;
 }
 
 /**
@@ -133,18 +184,14 @@ function unregister_comment_blocks_javascript(): void {
 }
 
 /**
- * Remove any server-side registration of WordPress core comment blocks.
+ * Returns the names of the core comment blocks.
  *
- * @see unregister_comment_blocks_javascript() for client-side removal.
+ * @see src/index.js for the same list on the client.
  *
- * @since 1.1.0
+ * @return string[] Block names.
  */
-function unregister_comment_blocks(): void {
-
-	// Retrieve all registered blocks.
-	$registered_blocks = \WP_Block_Type_Registry::get_instance()->get_all_registered();
-
-	$blocks = [
+function get_comment_block_names(): array {
+	return [
 		'core/comments',
 		'core/comments-query-loop', // Replaced by core/comments in Gutenberg 13.7.
 
@@ -169,12 +216,43 @@ function unregister_comment_blocks(): void {
 		'core/post-comments-form',
 		'core/post-comments-link',
 	];
+}
 
-	foreach ( $blocks as $block ) {
+/**
+ * Remove any server-side registration of WordPress core comment blocks.
+ *
+ * @see unregister_comment_blocks_javascript() for client-side removal.
+ *
+ * @since 1.1.0
+ */
+function unregister_comment_blocks(): void {
+
+	// Retrieve all registered blocks.
+	$registered_blocks = \WP_Block_Type_Registry::get_instance()->get_all_registered();
+
+	foreach ( get_comment_block_names() as $block ) {
 		if ( isset( $registered_blocks[ $block ] ) ) {
 			unregister_block_type( $block );
 		}
 	}
+}
+
+/**
+ * Renders core comment blocks as an empty string.
+ *
+ * WordPress renders a block it does not know as its saved markup. Without
+ * this, a theme's Comments block still prints its "Comments" heading.
+ *
+ * @param string|null          $pre_render   The content to use instead of rendering the block.
+ * @param array<string, mixed> $parsed_block The block being rendered.
+ * @return string|null An empty string for a comment block, or $pre_render.
+ */
+function skip_comment_block_render( $pre_render, array $parsed_block ) {
+	if ( in_array( $parsed_block['blockName'] ?? null, get_comment_block_names(), true ) ) {
+		return '';
+	}
+
+	return $pre_render;
 }
 
 /**
@@ -251,9 +329,13 @@ function filter_wp_count_comments(): \stdClass {
 }
 
 /**
- * Block access to the Settings -> Discussion and Edit Comments views
- * in the admin.
+ * Block access to the Settings -> Discussion, Comments, and Edit Comment
+ * screens in the admin.
  */
 function block_comments_admin_screen(): void {
-	wp_die( esc_html__( 'This screen is disabled by the Turn Comments Off plugin.', 'turn-comments-off' ) );
+	wp_die(
+		esc_html__( 'This screen is disabled by the Turn Comments Off plugin.', 'turn-comments-off' ),
+		'',
+		array( 'response' => 403 )
+	);
 }
