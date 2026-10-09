@@ -97,7 +97,10 @@ function seed_comments( int $post_id, array $comments ): void {
  * Seeds the site.
  */
 function run(): void {
-	update_option( 'permalink_structure', '/%postname%/' );
+	global $wp_rewrite;
+
+	// Updating the option alone leaves $wp_rewrite on the old structure for this flush.
+	$wp_rewrite->set_permalink_structure( '/%postname%/' );
 	flush_rewrite_rules();
 
 	if ( 'twentytwentyfive' !== get_stylesheet() ) {
