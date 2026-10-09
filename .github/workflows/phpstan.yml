@@ -1,5 +1,7 @@
+# Run PHPStan and comment on the pull request with any issues.
+#
 # This file is managed in https://github.com/happyprime/projects
-name: Verify build (Node 24)
+name: PHPStan (Default, PHP 8.3)
 
 on:
   pull_request:
@@ -7,7 +9,7 @@ on:
     paths:
       - '**'
       - '!.github/workflows/**'
-      - .github/workflows/verify-build.yml
+      - .github/workflows/phpstan.yml
 
 # Cancel a run that a newer push to the same pull request has superseded.
 # GitHub bills per job by wall-clock time rounded up to the minute, so a run
@@ -31,6 +33,6 @@ permissions:
 
 jobs:
   call-workflow:
-    uses: happyprime/workflows/.github/workflows/verify-build.yml@trunk
+    uses: happyprime/workflows/.github/workflows/phpstan.yml@trunk
     with:
-      node-version: 24
+      php-version: '8.3'
