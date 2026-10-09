@@ -73,6 +73,7 @@ add_action( 'admin_bar_menu', __NAMESPACE__ . '\remove_my_sites_comments_menu', 
 add_action( 'admin_menu', __NAMESPACE__ . '\remove_comments_menu_page' );
 add_action( 'load-options-discussion.php', __NAMESPACE__ . '\block_comments_admin_screen' );
 add_action( 'load-edit-comments.php', __NAMESPACE__ . '\block_comments_admin_screen' );
+add_action( 'load-comment.php', __NAMESPACE__ . '\block_comments_admin_screen' );
 
 /**
  * Filter the comments pre query.
@@ -328,8 +329,8 @@ function filter_wp_count_comments(): \stdClass {
 }
 
 /**
- * Block access to the Settings -> Discussion and Edit Comments views
- * in the admin.
+ * Block access to the Settings -> Discussion, Comments, and Edit Comment
+ * screens in the admin.
  */
 function block_comments_admin_screen(): void {
 	wp_die(
