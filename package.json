@@ -39,16 +39,13 @@
   "scripts": {
     "build": "webpack --mode production",
     "start": "webpack --mode development --watch",
-    "lint": "eslint .",
-    "fix": "eslint . --fix",
-    "lint:package": "node ./node_modules/npm-package-json-lint/dist/cli.js ./",
+    "lint:js": "eslint .",
+    "fix:js": "eslint . --fix",
+    "lint:package": "node ./node_modules/npm-package-json-lint/dist/cli.js ./package.json",
     "env:start": "wp-env start",
     "env:stop": "wp-env stop",
     "env:destroy": "wp-env destroy",
     "env:cli": "wp-env run cli",
     "env:logs": "wp-env logs"
-  },
-  "npmpackagejsonlint": {
-    "extends": "@wordpress/npm-package-json-lint-config"
   }
 }
