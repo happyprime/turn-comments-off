@@ -15,6 +15,8 @@ Activate this plugin to immediately remove all comment functionality from WordPr
 * Unregister all core comment blocks in the editor.
 * Remove "Manage Comments" from My Sites on multisite. (If network activated.)
 
+Editor Notes introduced in WordPress 6.9 remain available.
+
 No configuration necessary (or available).
 
 If you find something we missed, [please let us know](https://github.com/happyprime/turn-comments-off)!

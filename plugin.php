@@ -40,7 +40,7 @@ add_filter( 'pings_open', '__return_false' );
 // No content has an existing comment.
 add_filter( 'get_comments_number', '__return_zero' );
 
-// So return an empty set or count of comments for all comment queries.
+// So return an empty set or count of comments, except for editor Notes.
 add_filter( 'comments_pre_query', __NAMESPACE__ . '\filter_comments_pre_query', 10, 2 );
 
 // And disable the comments feed.
@@ -70,9 +70,14 @@ add_action( 'load-edit-comments.php', __NAMESPACE__ . '\block_comments_admin_scr
  *
  * @param array<int,\WP_Comment>|int|null $comments The comments to filter.
  * @param \WP_Comment_Query               $query The query object.
- * @return array<int,\WP_Comment>|int The filtered comments.
+ * @return array<int,\WP_Comment>|int|null The filtered comments.
  */
 function filter_comments_pre_query( $comments, \WP_Comment_Query $query ) {
+	// Notes use the comments API for internal editor collaboration.
+	if ( 'note' === ( $query->query_vars['type'] ?? '' ) ) {
+		return $comments;
+	}
+
 	if ( ! empty( $query->query_vars['count'] ) ) {
 		return 0;
 	}
