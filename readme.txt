@@ -2,7 +2,7 @@
 Contributors: happyprime, jeremyfelt, slocker, philcable
 Tags: comments
 Requires at least: 5.9
-Tested up to: 7.0
+Tested up to: 7.1
 Stable tag: 2.0.2
 License: GPLv2 or later
 Requires PHP: 7.4
@@ -21,6 +21,8 @@ Activate this plugin to immediately remove all comment functionality from WordPr
 * Remove the comments feed link.
 * Unregister all core comment blocks in the editor.
 * Remove "Manage Comments" from My Sites on multisite. (If network activated.)
+
+Editor Notes introduced in WordPress 6.9 remain available.
 
 No configuration necessary (or available).
 
