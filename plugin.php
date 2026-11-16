@@ -49,6 +49,10 @@ add_filter( 'get_comments_number', '__return_zero' );
 // So return an empty set or count for any query that can return comments.
 add_filter( 'comments_pre_query', __NAMESPACE__ . '\filter_comments_pre_query', 10, 2 );
 
+// Except when the privacy tools export or erase a person's stored comments.
+add_filter( 'wp_privacy_personal_data_exporters', __NAMESPACE__ . '\allow_privacy_comment_queries', 11 );
+add_filter( 'wp_privacy_personal_data_erasers', __NAMESPACE__ . '\allow_privacy_comment_queries', 11 );
+
 // And disable the comments feed.
 add_filter( 'feed_links_show_comments_feed', '__return_false' );
 
@@ -110,6 +114,40 @@ function filter_comments_pre_query( $comments, \WP_Comment_Query $query ) {
 	}
 
 	return [];
+}
+
+/**
+ * Lets the core comment exporter or eraser query comments.
+ *
+ * Both find a person's comments with get_comments(). Without this, an export
+ * leaves out every stored comment and an erasure reports success without
+ * anonymizing them.
+ *
+ * @param array<string,mixed> $handlers Exporters or erasers, keyed by ID.
+ * @return array<string,mixed> The handlers, with the comment callback wrapped.
+ */
+function allow_privacy_comment_queries( array $handlers ): array {
+	$handler = $handlers['wordpress-comments'] ?? null;
+
+	if ( ! is_array( $handler ) || ! is_callable( $handler['callback'] ?? null ) ) {
+		return $handlers;
+	}
+
+	$callback = $handler['callback'];
+
+	$handler['callback'] = static function ( string $email_address, int $page = 1 ) use ( $callback ) {
+		remove_filter( 'comments_pre_query', __NAMESPACE__ . '\filter_comments_pre_query' );
+
+		try {
+			return $callback( $email_address, $page );
+		} finally {
+			add_filter( 'comments_pre_query', __NAMESPACE__ . '\filter_comments_pre_query', 10, 2 );
+		}
+	};
+
+	$handlers['wordpress-comments'] = $handler;
+
+	return $handlers;
 }
 
 /**

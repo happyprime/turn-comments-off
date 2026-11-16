@@ -25,6 +25,8 @@ Activate this plugin to immediately remove all comment functionality from WordPr
 
 Comment types other than comments, pingbacks, and trackbacks keep working. That includes editor notes (WordPress 6.9), their reactions (WordPress 7.2), and data plugins store as comments, such as WooCommerce order notes.
 
+Tools → Export Personal Data and Erase Personal Data still find stored comments.
+
 No configuration necessary (or available).
 
 If you find something we missed, [please let us know](https://github.com/happyprime/turn-comments-off)!
