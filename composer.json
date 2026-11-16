@@ -1,9 +1,8 @@
 {
 	"name": "happyprime/turn-comments-off",
 	"description": "Turn comments off everywhere in WordPress",
-	"version": "2.0.2",
 	"type": "wordpress-plugin",
-	"license": "GPLv2+",
+	"license": "GPL-2.0-or-later",
 	"minimum-stability": "dev",
 	"prefer-stable": true,
 	"config": {
@@ -17,7 +16,7 @@
 		}
 	},
 	"require-dev": {
-		"happyprime/coding-standards": "^1.0-alpha"
+		"happyprime/coding-standards": "^1.0.0-alpha3"
 	},
 	"scripts": {
 		"phpcs": "vendor/bin/phpcs",
