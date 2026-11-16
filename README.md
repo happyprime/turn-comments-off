@@ -11,6 +11,7 @@ Activate this plugin to immediately remove all comment functionality from WordPr
 * Remove "Comments" from the admin menu.
 * Remove the comments bubble from the admin bar.
 * Remove "Recent Comments" from the site activity dashboard widget.
+* Remove the classic Recent Comments widget.
 * Remove the comments feed link.
 * Unregister all core comment blocks in the editor.
 * Remove "Manage Comments" from My Sites on multisite. (If network activated.)

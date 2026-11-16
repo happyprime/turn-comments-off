@@ -72,6 +72,9 @@ add_action( 'init', __NAMESPACE__ . '\unregister_comment_blocks', 99 );
 // An unregistered block still renders its saved markup, so render nothing instead.
 add_filter( 'pre_render_block', __NAMESPACE__ . '\skip_comment_block_render', 10, 2 );
 
+// Remove the classic Recent Comments widget.
+add_action( 'widgets_init', __NAMESPACE__ . '\unregister_recent_comments_widget' );
+
 // And disable all comment related views in the admin.
 add_filter( 'wp_count_comments', __NAMESPACE__ . '\filter_wp_count_comments' );
 add_action( 'add_admin_bar_menus', __NAMESPACE__ . '\remove_admin_bar_comments_menu' );
@@ -300,6 +303,16 @@ function skip_comment_block_render( $pre_render, array $parsed_block ) {
 	}
 
 	return $pre_render;
+}
+
+/**
+ * Unregisters the classic Recent Comments widget.
+ *
+ * A sidebar skips placements of an unregistered widget, so existing ones stop
+ * rendering.
+ */
+function unregister_recent_comments_widget(): void {
+	unregister_widget( 'WP_Widget_Recent_Comments' );
 }
 
 /**
