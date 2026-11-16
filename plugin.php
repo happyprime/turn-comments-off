@@ -31,6 +31,12 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+/**
+ * The comment types the plugin turns off, with the aliases WP_Comment_Query
+ * accepts for them. Other types, such as editor notes, keep working.
+ */
+const COMMENT_TYPES = [ 'comment', 'comments', 'pings', 'pingback', 'trackback' ];
+
 // Comments are never open.
 add_filter( 'comments_open', '__return_false' );
 
@@ -40,8 +46,12 @@ add_filter( 'pings_open', '__return_false' );
 // No content has an existing comment.
 add_filter( 'get_comments_number', '__return_zero' );
 
-// So return an empty set or count of comments, except for editor Notes.
+// So return an empty set or count for any query that can return comments.
 add_filter( 'comments_pre_query', __NAMESPACE__ . '\filter_comments_pre_query', 10, 2 );
+
+// Except when the privacy tools export or erase a person's stored comments.
+add_filter( 'wp_privacy_personal_data_exporters', __NAMESPACE__ . '\allow_privacy_comment_queries', 11 );
+add_filter( 'wp_privacy_personal_data_erasers', __NAMESPACE__ . '\allow_privacy_comment_queries', 11 );
 
 // And disable the comments feed.
 add_filter( 'feed_links_show_comments_feed', '__return_false' );
@@ -52,8 +62,8 @@ add_filter( 'comments_rewrite_rules', '__return_empty_array' );
 // Comment feeds still resolve without those rules, so block them outright.
 add_action( 'template_redirect', __NAMESPACE__ . '\block_comment_feeds' );
 
-// The REST API reads comments without WP_Comment_Query, so drop its routes.
-add_filter( 'rest_endpoints', __NAMESPACE__ . '\remove_comment_rest_routes' );
+// The REST API reads single comments without WP_Comment_Query, so block its comment requests.
+add_filter( 'rest_request_before_callbacks', __NAMESPACE__ . '\block_comment_rest_requests', 10, 3 );
 
 // Then remove comment support from everything.
 add_action( 'init', __NAMESPACE__ . '\remove_comment_support', 99 );
@@ -66,25 +76,36 @@ add_action( 'init', __NAMESPACE__ . '\unregister_comment_blocks', 99 );
 // An unregistered block still renders its saved markup, so render nothing instead.
 add_filter( 'pre_render_block', __NAMESPACE__ . '\skip_comment_block_render', 10, 2 );
 
+// Remove the classic Recent Comments widget.
+add_action( 'widgets_init', __NAMESPACE__ . '\unregister_recent_comments_widget' );
+
 // And disable all comment related views in the admin.
 add_filter( 'wp_count_comments', __NAMESPACE__ . '\filter_wp_count_comments' );
 add_action( 'add_admin_bar_menus', __NAMESPACE__ . '\remove_admin_bar_comments_menu' );
 add_action( 'admin_bar_menu', __NAMESPACE__ . '\remove_my_sites_comments_menu', 21 );
 add_action( 'admin_menu', __NAMESPACE__ . '\remove_comments_menu_page' );
-add_action( 'load-options-discussion.php', __NAMESPACE__ . '\block_comments_admin_screen' );
+add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\hide_discussion_comment_settings' );
 add_action( 'load-edit-comments.php', __NAMESPACE__ . '\block_comments_admin_screen' );
 add_action( 'load-comment.php', __NAMESPACE__ . '\block_comments_admin_screen' );
 
 /**
- * Filter the comments pre query.
+ * Returns an empty set or count for a query that can return comments.
+ *
+ * A query that names only other types, such as `note` or WooCommerce's
+ * `order_note`, runs as normal.
  *
  * @param array<int,\WP_Comment>|int|null $comments The comments to filter.
- * @param \WP_Comment_Query               $query The query object.
+ * @param \WP_Comment_Query               $query    The query object.
  * @return array<int,\WP_Comment>|int|null The filtered comments.
  */
 function filter_comments_pre_query( $comments, \WP_Comment_Query $query ) {
-	// Notes use the comments API for internal editor collaboration.
-	if ( 'note' === ( $query->query_vars['type'] ?? '' ) ) {
+	// An empty type and 'all' add no type constraint to the query.
+	$types = array_diff(
+		array_merge( (array) ( $query->query_vars['type'] ?? '' ), (array) ( $query->query_vars['type__in'] ?? '' ) ),
+		[ '', 'all' ]
+	);
+
+	if ( [] !== $types && [] === array_intersect( $types, COMMENT_TYPES ) ) {
 		return $comments;
 	}
 
@@ -93,6 +114,40 @@ function filter_comments_pre_query( $comments, \WP_Comment_Query $query ) {
 	}
 
 	return [];
+}
+
+/**
+ * Lets the core comment exporter or eraser query comments.
+ *
+ * Both find a person's comments with get_comments(). Without this, an export
+ * leaves out every stored comment and an erasure reports success without
+ * anonymizing them.
+ *
+ * @param array<string,mixed> $handlers Exporters or erasers, keyed by ID.
+ * @return array<string,mixed> The handlers, with the comment callback wrapped.
+ */
+function allow_privacy_comment_queries( array $handlers ): array {
+	$handler = $handlers['wordpress-comments'] ?? null;
+
+	if ( ! is_array( $handler ) || ! is_callable( $handler['callback'] ?? null ) ) {
+		return $handlers;
+	}
+
+	$callback = $handler['callback'];
+
+	$handler['callback'] = static function ( string $email_address, int $page = 1 ) use ( $callback ) {
+		remove_filter( 'comments_pre_query', __NAMESPACE__ . '\filter_comments_pre_query' );
+
+		try {
+			return $callback( $email_address, $page );
+		} finally {
+			add_filter( 'comments_pre_query', __NAMESPACE__ . '\filter_comments_pre_query', 10, 2 );
+		}
+	};
+
+	$handlers['wordpress-comments'] = $handler;
+
+	return $handlers;
 }
 
 /**
@@ -116,24 +171,52 @@ function block_comment_feeds(): void {
 }
 
 /**
- * Removes the core comment routes from the REST API.
+ * Sends a 404 for REST requests that read or write comments.
  *
- * WP_REST_Comments_Controller resolves a single comment with get_comment(),
- * which never runs a WP_Comment_Query, so /wp/v2/comments/<id> returned
- * approved comments in full. Removing the routes closes that and the write
- * endpoints in one step; requests to them now 404 as unknown routes.
+ * WP_REST_Comments_Controller reads a single comment with get_comment(),
+ * which never runs a WP_Comment_Query, so filter_comments_pre_query() alone
+ * leaves /wp/v2/comments/<id> open. Requests for other types, such as notes
+ * and their reactions, run as normal.
  *
- * @param array<string,mixed> $endpoints Endpoint handlers keyed by route.
- * @return array<string,mixed> The remaining endpoint handlers.
+ * @param mixed               $response The response so far, or an error.
+ * @param array<string,mixed> $handler  The route handler.
+ * @param \WP_REST_Request    $request  The request.
+ * @return mixed The response, or an error for a comment request.
  */
-function remove_comment_rest_routes( array $endpoints ): array {
-	foreach ( array_keys( $endpoints ) as $route ) {
-		if ( 1 === preg_match( '#^/wp/v2/comments(/|$)#', (string) $route ) ) {
-			unset( $endpoints[ $route ] );
-		}
+function block_comment_rest_requests( $response, array $handler, \WP_REST_Request $request ) {
+	if ( 1 !== preg_match( '#^/wp/v2/comments(/|$)#', $request->get_route() ) ) {
+		return $response;
 	}
 
-	return $endpoints;
+	$id = $request->get_url_params()['id'] ?? null;
+
+	if ( is_numeric( $id ) ) {
+		$comment = get_comment( (int) $id );
+
+		// Core sends its own 404 for an unknown ID.
+		if ( ! $comment instanceof \WP_Comment ) {
+			return $response;
+		}
+
+		$type = $comment->comment_type;
+	} else {
+		$type = $request->get_param( 'type' );
+	}
+
+	// Requests without a type, and comments stored before WordPress 5.5, are comments.
+	if ( ! is_string( $type ) || '' === $type ) {
+		$type = 'comment';
+	}
+
+	if ( ! in_array( $type, COMMENT_TYPES, true ) ) {
+		return $response;
+	}
+
+	return new \WP_Error(
+		'rest_comments_disabled',
+		__( 'Comments are turned off on this site.', 'turn-comments-off' ),
+		array( 'status' => 404 )
+	);
 }
 
 /**
@@ -261,12 +344,45 @@ function skip_comment_block_render( $pre_render, array $parsed_block ) {
 }
 
 /**
- * Remove the "Comments" and Settings -> Discussion menus from the
- * side menu in the dashboard.
+ * Unregisters the classic Recent Comments widget.
+ *
+ * A sidebar skips placements of an unregistered widget, so existing ones stop
+ * rendering.
+ */
+function unregister_recent_comments_widget(): void {
+	unregister_widget( 'WP_Widget_Recent_Comments' );
+}
+
+/**
+ * Remove the "Comments" menu from the side menu in the dashboard.
  */
 function remove_comments_menu_page(): void {
 	remove_menu_page( 'edit-comments.php' );
-	remove_submenu_page( 'options-general.php', 'options-discussion.php' );
+}
+
+/**
+ * Hides the comment settings on Settings → Discussion.
+ *
+ * The screen stays for the note email setting, avatar settings, and settings
+ * other plugins add there. Hidden fields still submit, so saving the screen
+ * keeps their values.
+ *
+ * @param string $hook_suffix The current admin screen.
+ */
+function hide_discussion_comment_settings( string $hook_suffix ): void {
+	if ( 'options-discussion.php' !== $hook_suffix ) {
+		return;
+	}
+
+	// Each row is matched by a field only it contains.
+	$rows = '#default_comment_status, #require_name_email, #page_comments, #comment_moderation, #comment_max_links, #disallowed_keys';
+
+	$css = '.form-table tr:has(' . $rows . ') { display: none; }'
+		. '.form-table label:is([for="comments_notify"], [for="moderation_notify"]), .form-table label:is([for="comments_notify"], [for="moderation_notify"]) + br { display: none; }'
+		// Before WordPress 6.9, the email row has no note setting to keep.
+		. '.form-table tr:has(#comments_notify):not(:has(#wp_notes_notify)) { display: none; }';
+
+	wp_add_inline_style( 'common', $css );
 }
 
 /**
@@ -334,8 +450,7 @@ function filter_wp_count_comments(): \stdClass {
 }
 
 /**
- * Block access to the Settings -> Discussion, Comments, and Edit Comment
- * screens in the admin.
+ * Block access to the Comments and Edit Comment screens in the admin.
  */
 function block_comments_admin_screen(): void {
 	wp_die(

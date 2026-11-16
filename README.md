@@ -7,15 +7,18 @@ Turn comments off everywhere in WordPress.
 Activate this plugin to immediately remove all comment functionality from WordPress.
 
 * Stop comments and pingbacks on all existing and future content.
-* Remove "Discussion" from Settings in the admin menu.
+* Hide comment settings on Settings → Discussion. Note email and avatar settings stay.
 * Remove "Comments" from the admin menu.
 * Remove the comments bubble from the admin bar.
 * Remove "Recent Comments" from the site activity dashboard widget.
+* Remove the classic Recent Comments widget.
 * Remove the comments feed link.
 * Unregister all core comment blocks in the editor.
 * Remove "Manage Comments" from My Sites on multisite. (If network activated.)
 
-Editor Notes introduced in WordPress 6.9 remain available.
+Comment types other than comments, pingbacks, and trackbacks keep working. That includes editor notes (WordPress 6.9), their reactions (WordPress 7.2), and data plugins store as comments, such as WooCommerce order notes.
+
+Tools → Export Personal Data and Erase Personal Data still find stored comments.
 
 No configuration necessary (or available).
 
