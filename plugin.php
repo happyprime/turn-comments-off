@@ -77,7 +77,7 @@ add_filter( 'wp_count_comments', __NAMESPACE__ . '\filter_wp_count_comments' );
 add_action( 'add_admin_bar_menus', __NAMESPACE__ . '\remove_admin_bar_comments_menu' );
 add_action( 'admin_bar_menu', __NAMESPACE__ . '\remove_my_sites_comments_menu', 21 );
 add_action( 'admin_menu', __NAMESPACE__ . '\remove_comments_menu_page' );
-add_action( 'load-options-discussion.php', __NAMESPACE__ . '\block_comments_admin_screen' );
+add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\hide_discussion_comment_settings' );
 add_action( 'load-edit-comments.php', __NAMESPACE__ . '\block_comments_admin_screen' );
 add_action( 'load-comment.php', __NAMESPACE__ . '\block_comments_admin_screen' );
 
@@ -303,12 +303,35 @@ function skip_comment_block_render( $pre_render, array $parsed_block ) {
 }
 
 /**
- * Remove the "Comments" and Settings -> Discussion menus from the
- * side menu in the dashboard.
+ * Remove the "Comments" menu from the side menu in the dashboard.
  */
 function remove_comments_menu_page(): void {
 	remove_menu_page( 'edit-comments.php' );
-	remove_submenu_page( 'options-general.php', 'options-discussion.php' );
+}
+
+/**
+ * Hides the comment settings on Settings → Discussion.
+ *
+ * The screen stays for the note email setting, avatar settings, and settings
+ * other plugins add there. Hidden fields still submit, so saving the screen
+ * keeps their values.
+ *
+ * @param string $hook_suffix The current admin screen.
+ */
+function hide_discussion_comment_settings( string $hook_suffix ): void {
+	if ( 'options-discussion.php' !== $hook_suffix ) {
+		return;
+	}
+
+	// Each row is matched by a field only it contains.
+	$rows = '#default_comment_status, #require_name_email, #page_comments, #comment_moderation, #comment_max_links, #disallowed_keys';
+
+	$css = '.form-table tr:has(' . $rows . ') { display: none; }'
+		. '.form-table label:is([for="comments_notify"], [for="moderation_notify"]), .form-table label:is([for="comments_notify"], [for="moderation_notify"]) + br { display: none; }'
+		// Before WordPress 6.9, the email row has no note setting to keep.
+		. '.form-table tr:has(#comments_notify):not(:has(#wp_notes_notify)) { display: none; }';
+
+	wp_add_inline_style( 'common', $css );
 }
 
 /**
@@ -376,8 +399,7 @@ function filter_wp_count_comments(): \stdClass {
 }
 
 /**
- * Block access to the Settings -> Discussion, Comments, and Edit Comment
- * screens in the admin.
+ * Block access to the Comments and Edit Comment screens in the admin.
  */
 function block_comments_admin_screen(): void {
 	wp_die(

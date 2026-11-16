@@ -14,7 +14,7 @@ Turn comments off everywhere in WordPress.
 Activate this plugin to immediately remove all comment functionality from WordPress.
 
 * Stop comments and pingbacks on all existing and future content.
-* Remove "Discussion" from Settings in the admin menu.
+* Hide comment settings on Settings → Discussion. Note email and avatar settings stay.
 * Remove "Comments" from the admin menu.
 * Remove the comments bubble from the admin bar.
 * Remove "Recent Comments" from the site activity dashboard widget.
