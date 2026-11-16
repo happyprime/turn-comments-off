@@ -31,6 +31,12 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+/**
+ * The comment types the plugin turns off, with the aliases WP_Comment_Query
+ * accepts for them. Other types, such as editor notes, keep working.
+ */
+const COMMENT_TYPES = [ 'comment', 'comments', 'pings', 'pingback', 'trackback' ];
+
 // Comments are never open.
 add_filter( 'comments_open', '__return_false' );
 
@@ -40,7 +46,7 @@ add_filter( 'pings_open', '__return_false' );
 // No content has an existing comment.
 add_filter( 'get_comments_number', '__return_zero' );
 
-// So return an empty set or count of comments, except for editor Notes.
+// So return an empty set or count for any query that can return comments.
 add_filter( 'comments_pre_query', __NAMESPACE__ . '\filter_comments_pre_query', 10, 2 );
 
 // And disable the comments feed.
@@ -52,8 +58,8 @@ add_filter( 'comments_rewrite_rules', '__return_empty_array' );
 // Comment feeds still resolve without those rules, so block them outright.
 add_action( 'template_redirect', __NAMESPACE__ . '\block_comment_feeds' );
 
-// The REST API reads comments without WP_Comment_Query, so drop its routes.
-add_filter( 'rest_endpoints', __NAMESPACE__ . '\remove_comment_rest_routes' );
+// The REST API reads single comments without WP_Comment_Query, so block its comment requests.
+add_filter( 'rest_request_before_callbacks', __NAMESPACE__ . '\block_comment_rest_requests', 10, 3 );
 
 // Then remove comment support from everything.
 add_action( 'init', __NAMESPACE__ . '\remove_comment_support', 99 );
@@ -76,15 +82,23 @@ add_action( 'load-edit-comments.php', __NAMESPACE__ . '\block_comments_admin_scr
 add_action( 'load-comment.php', __NAMESPACE__ . '\block_comments_admin_screen' );
 
 /**
- * Filter the comments pre query.
+ * Returns an empty set or count for a query that can return comments.
+ *
+ * A query that names only other types, such as `note` or WooCommerce's
+ * `order_note`, runs as normal.
  *
  * @param array<int,\WP_Comment>|int|null $comments The comments to filter.
- * @param \WP_Comment_Query               $query The query object.
+ * @param \WP_Comment_Query               $query    The query object.
  * @return array<int,\WP_Comment>|int|null The filtered comments.
  */
 function filter_comments_pre_query( $comments, \WP_Comment_Query $query ) {
-	// Notes use the comments API for internal editor collaboration.
-	if ( 'note' === ( $query->query_vars['type'] ?? '' ) ) {
+	// An empty type and 'all' add no type constraint to the query.
+	$types = array_diff(
+		array_merge( (array) ( $query->query_vars['type'] ?? '' ), (array) ( $query->query_vars['type__in'] ?? '' ) ),
+		[ '', 'all' ]
+	);
+
+	if ( [] !== $types && [] === array_intersect( $types, COMMENT_TYPES ) ) {
 		return $comments;
 	}
 
@@ -116,24 +130,52 @@ function block_comment_feeds(): void {
 }
 
 /**
- * Removes the core comment routes from the REST API.
+ * Sends a 404 for REST requests that read or write comments.
  *
- * WP_REST_Comments_Controller resolves a single comment with get_comment(),
- * which never runs a WP_Comment_Query, so /wp/v2/comments/<id> returned
- * approved comments in full. Removing the routes closes that and the write
- * endpoints in one step; requests to them now 404 as unknown routes.
+ * WP_REST_Comments_Controller reads a single comment with get_comment(),
+ * which never runs a WP_Comment_Query, so filter_comments_pre_query() alone
+ * leaves /wp/v2/comments/<id> open. Requests for other types, such as notes
+ * and their reactions, run as normal.
  *
- * @param array<string,mixed> $endpoints Endpoint handlers keyed by route.
- * @return array<string,mixed> The remaining endpoint handlers.
+ * @param mixed               $response The response so far, or an error.
+ * @param array<string,mixed> $handler  The route handler.
+ * @param \WP_REST_Request    $request  The request.
+ * @return mixed The response, or an error for a comment request.
  */
-function remove_comment_rest_routes( array $endpoints ): array {
-	foreach ( array_keys( $endpoints ) as $route ) {
-		if ( 1 === preg_match( '#^/wp/v2/comments(/|$)#', (string) $route ) ) {
-			unset( $endpoints[ $route ] );
-		}
+function block_comment_rest_requests( $response, array $handler, \WP_REST_Request $request ) {
+	if ( 1 !== preg_match( '#^/wp/v2/comments(/|$)#', $request->get_route() ) ) {
+		return $response;
 	}
 
-	return $endpoints;
+	$id = $request->get_url_params()['id'] ?? null;
+
+	if ( is_numeric( $id ) ) {
+		$comment = get_comment( (int) $id );
+
+		// Core sends its own 404 for an unknown ID.
+		if ( ! $comment instanceof \WP_Comment ) {
+			return $response;
+		}
+
+		$type = $comment->comment_type;
+	} else {
+		$type = $request->get_param( 'type' );
+	}
+
+	// Requests without a type, and comments stored before WordPress 5.5, are comments.
+	if ( ! is_string( $type ) || '' === $type ) {
+		$type = 'comment';
+	}
+
+	if ( ! in_array( $type, COMMENT_TYPES, true ) ) {
+		return $response;
+	}
+
+	return new \WP_Error(
+		'rest_comments_disabled',
+		__( 'Comments are turned off on this site.', 'turn-comments-off' ),
+		array( 'status' => 404 )
+	);
 }
 
 /**

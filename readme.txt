@@ -22,7 +22,7 @@ Activate this plugin to immediately remove all comment functionality from WordPr
 * Unregister all core comment blocks in the editor.
 * Remove "Manage Comments" from My Sites on multisite. (If network activated.)
 
-Editor Notes introduced in WordPress 6.9 remain available.
+Comment types other than comments, pingbacks, and trackbacks keep working. That includes editor notes (WordPress 6.9), their reactions (WordPress 7.2), and data plugins store as comments, such as WooCommerce order notes.
 
 No configuration necessary (or available).
 
