@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+<title id="title">Turn Comments Off</title>
+<desc id="desc">A white geometric icon on a circular color badge.</desc>
+<defs>
+  <linearGradient id="badge-turn-comments-off" x1="100%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#D44427"/>
+    <stop offset="28%" stop-color="#C7254E"/>
+    <stop offset="100%" stop-color="#A3203C"/>
+  </linearGradient>
+<mask id="notch-turn-comments-off"><rect width="256" height="256" fill="#fff"/><polygon points="201.2,58.4 359.1,32.3 370.6,-111.6 226.7,-99.5" fill="#000" stroke="#000" stroke-width="6.6" stroke-linejoin="round"/></mask>
+</defs>
+<circle cx="128" cy="128" r="118" fill="url(#badge-turn-comments-off)" mask="url(#notch-turn-comments-off)"/>
+
+  <g class="glyph" transform="translate(128 128) scale(0.85) translate(-128 -128)">
+<!-- Carefully traced proportions from the supplied original: tall portrait chat frame, diagonal tail, and a unique nested arrow/window mark. -->
+  <g transform="matrix(0.81 0 0 0.81 -6.46 -15.37)" fill="#fff" fill-rule="evenodd">
+    <path d="M 115 69 H 216 C 226 69 233 77 233 86 V 267 C 233 276 225 284 215 284 C 210 284 207 282 203 279 L 173 251 H 113 C 104 251 98 244 98 234 V 86 C 98 76 106 69 115 69 Z M 118 87 H 213 Q 215 87 215 89 V 263 Q 215 266 213 264 L 183 235 Q 181 233 179 233 H 118 Q 116 233 116 231 V 89 Q 116 87 118 87 Z"/>
+    <path d="M 149 123 H 177 C 181 123 185 126 185 130 V 158 L 197 175 C 199 178 200 180 198 183 L 190 195 H 154 L 146 184 V 126 Q 146 123 149 123 Z M 153 130 H 177 Q 179 130 179 133 V 155 Q 179 156 177 156 H 153 Q 152 156 152 154 V 132 Q 152 130 153 130 Z M 156 163 H 180 L 188 175 Q 188 176 186 176 H 165 Z M 168 181 H 190 L 186 189 H 163 Q 160 189 162 186 L 165 182 Q 166 181 168 181 Z"/>
+  </g>
+  </g>
+</svg>
